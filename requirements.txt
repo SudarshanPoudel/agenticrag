@@ -1,0 +1,13 @@
+scrapy
+pandas
+markdownify
+elasticsearch
+transformers
+markdown
+langchain
+langchain-google-genai
+python-dotenv
+sentence-transformers
+langgraph
+e2b-code-interpreter
+rich

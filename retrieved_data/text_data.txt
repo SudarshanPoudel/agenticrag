@@ -1,0 +1,48 @@
+# AutoGPT - Wikipedia
+### Other
+.cms). *The Times of India*. April 14, 2023. [ISSN](/wiki/ISSN_(identifier) "ISSN (identifier)") [0971-8257](https://search.worldcat.org/issn/0971-8257). [Archived](https://web.archive.org/web/20240923002454/https://timesofindia.indiatimes.com/gadgets-news/explained-what-is-AutoGPT-the-new-do-it-all-ai-tool-and-how-it-works/articleshow/99481188.cms) from the original on September 23, 2024. Retrieved November 6, 2023. 10. ^ [***a***](#cite_ref-:4_10-0) [***b***](#cite_ref-:4_10-1) Mauran, Cecily (April 14, 2023). ["What is AutoGPT and why are hustle bros hype for it?"](https://mashable.com/article/autogpt-chatgpt-hustle-bros-explainer). *Mashable*. [Archived](https://web.archive.org/web/20230416193947/https://mashable.com/article/autogpt-chatgpt-hustle-bros-explainer) from the original on April 16, 2023. Retrieved November 8, 2023. 11. ^ [***a***](#cite_ref-:9_11-0) [***b***](#cite_ref-:9_11-1) Betz, Bradford (April 10, 2023). ["A.I. bot 'ChaosGPT' tweets its plans to destroy humanity: 'we must eliminate them'"](https://www.foxnews.com/tech/ai-bot-chaosgpt-plans-destroy-humanity-we-must-eliminate-them). *Fox News*. [Archived](https://web.archive.org/web/20231108221311/https://www.foxnews.com/tech/ai-bot-chaosgpt-plans-destroy-humanity-we-must-eliminate-them) from the original on November 8, 2023. Retrieved November 8, 2023. 12. ^ [***a***](#cite_ref-:5_12-0) [***b***](#cite_ref-:5_12-1) Nield, David. ["Supercharge Your ChatGPT Prompts With AutoGPT"](https://www.wired.com/story/chatgpt-prompts-AutoGPT/). *Wired*. [ISSN](/wiki/ISSN_(identifier) "ISSN (identifier)") [1059-1028](https://search.worldcat.org/issn/1059-1028). Retrieved November 8, 2023. 13. **[^](#cite_ref-13)** Woollacott, Emma (April 24, 2023). ["AutoGPT explained: is it really risk free"](https://cybernews.com/tech/autogpt-explained-capabilities-dangers/). *cybernews*. [Archived](https://web.archive.org/web/20231108223026/https://cybernews
+
+---
+
+# AutoGPT - Wikipedia
+### Other
+.com/tech/autogpt-explained-capabilities-dangers/). *cybernews*. [Archived](https://web.archive.org/web/20231108223026/https://cybernews.com/tech/autogpt-explained-capabilities-dangers/) from the original on November 8, 2023. Retrieved November 8, 2023. 14. ^ [***a***](#cite_ref-:6_14-0) [***b***](#cite_ref-:6_14-1) [***c***](#cite_ref-:6_14-2) Malcolm McMillan (April 18, 2023). ["AutoGPT is a new AI that does the work for you — here's how it works"](https://www.tomsguide.com/news/AutoGPT). *Tom's Guide*. Retrieved November 8, 2023. 15. **[^](#cite_ref-15)** Metz, Cade (June 10, 2023). ["How Could A.I. Destroy Humanity?"](https://www.nytimes.com/2023/06/10/technology/ai-humanity.html). *The New York Times*. [Archived](https://web.archive.org/web/20231111070001/http://www.nytimes.com/2023/06/10/technology/ai-humanity.html) from the original on November 11, 2023. Retrieved November 8, 2023. 16. **[^](#cite_ref-16)** Metz, Cade (October 16, 2023). ["How 'A.I. Agents' That Roam the Internet Could One Day Replace Workers"](https://www.nytimes.com/2023/10/16/technology/ai-agents-workers-replace.html). *The New York Times*. [Archived](https://web.archive.org/web/20231107231305/https://www.nytimes.com/2023/10/16/technology/ai-agents-workers-replace.html) from the original on November 7, 2023. Retrieved November 8, 2023. 17. ^ [***a***](#cite_ref-:7_17-0) [***b***](#cite_ref-:7_17-1) Sullivan, Mark (April 13, 2023). ["AutoGPT and BabyAGI: How 'autonomous agents' are bringing generative AI to the masses"](https://www.fastcompany.com/90880294/AutoGPT-and-babyagi-how-autonomous-agents-are-bringing-generative-ai-to-the-masses). *Fast Company*. Retrieved November 8, 2023. 18. **[^](#cite_ref-18)** Avram Piltch (April 22, 2023). ["AutoGPT and BabyAGI Are AI's New Hotness, But They Suck Right Now"](https://www.tomshardware.com/news/autonomous-agents-new-big-thing). *Tom's Hardware*. [Archived](https://web.archive.org/web/20231030013013/https://www
+
+---
+
+# AutoGPT - Wikipedia
+Background ----------
+[[edit](/w/index.php?title=AutoGPT&action=edit&section=1 "Edit section: Background")]
+On March 30, 2023, AutoGPT was released by Toran Bruce Richards, the founder and lead developer at video game company Significant Gravitas Ltd.[[3]](#cite_note-tsun-3) AutoGPT is an open-source autonomous AI agent based on OpenAI's API for GPT-4,[[4]](#cite_note-:1-4) the large language model released on March 14, 2023. AutoGPT is among the first examples of an application using GPT-4 to perform autonomous tasks.[[3]](#cite_note-tsun-3)
+Richards developed AutoGPT to create a model that could respond to real-time feedback and to tasks that include long-term outlooks.[[5]](#cite_note-:10-5) Users are prompted to describe the AutoGPT agent's name, role, and objective and specify up to five ways to achieve that objective.[[6]](#cite_note-:0-6) From there, AutoGPT will independently work to achieve its objective without the user having to provide a prompt at every step.[[7]](#cite_note-:8-7)
+In October 2023, AutoGPT raised $12M[[8]](#cite_note-8) from investors.
+### Usage
+[[edit](/w/index.php?title=AutoGPT&action=edit&section=2 "Edit section: Usage")]
+
+AutoGPT is publicly available on GitHub.[[6]](#cite_note-:0-6) To use it, users must install AutoGPT in a development environment such as Docker. Also, users must register it with an API key from OpenAI, which requires users to have a paid OpenAI account.[[6]](#cite_note-:0-6)
+
+Capabilities ------------
+
+[[edit](/w/index.php?title=AutoGPT&action=edit&section=3 "Edit section: Capabilities")]
+
+---
+
+# AutoGPT - Wikipedia
+### Other
+1. **[^](#cite_ref-1)** Ortiz, Sabrina (April 14, 2023). ["What is AutoGPT? Everything to know about the next powerful AI tool"](https://www.zdnet.com/article/what-is-auto-gpt-everything-to-know-about-the-next-powerful-ai-tool/). ZDNET. [Archived](https://web.archive.org/web/20230416195550/https://www.zdnet.com/article/what-is-auto-gpt-everything-to-know-about-the-next-powerful-ai-tool/) from the original on April 16, 2023. Retrieved April 16, 2023. 2. **[^](#cite_ref-jina_2-0)** Xaio, Han (April 13, 2023). ["AutoGPT Unmasked: The Hype and Hard Truths of Its Production Pitfalls"](https://jina.ai/news/AutoGPT-unmasked-hype-hard-truths-production-pitfalls/). Jina AI. [Archived](https://web.archive.org/web/20230417145451/https://jina.ai/news/AutoGPT-unmasked-hype-hard-truths-production-pitfalls/) from the original on April 17, 2023. Retrieved April 17, 2023. 3. ^ [***a***](#cite_ref-tsun_3-0) [***b***](#cite_ref-tsun_3-1) [***c***](#cite_ref-tsun_3-2) [***d***](#cite_ref-tsun_3-3) [***e***](#cite_ref-tsun_3-4) Jiang, Kevin (April 14, 2023). ["What's AutoGPT? New, autonomous 'AI agents' can act on their own, rewrite their own code"](https://www.thestar.com/business/technology/what-s-auto-gpt-new-autonomous-ai-agents-can-act-on-their-own-rewrite-their/article_ee774f6d-fe65-5205-b0f4-adf0a3ac99fd.html). *[Toronto Star](/wiki/Toronto_Star "Toronto Star")*. The Toronto Star. [Archived](https://web.archive.org/web/20240930230625/https://www.thestar.com/business/technology/what-s-auto-gpt-new-autonomous-ai-agents-can-act-on-their-own-rewrite-their/article_ee774f6d-fe65-5205-b0f4-adf0a3ac99fd.html) from the original on September 30, 2024. Retrieved April 16, 2023.
+
+---
+
+# AutoGPT - Wikipedia
+### Business
+AutoGPT can be used to do market research, analyze investments, research products and write product reviews, create a business plan or improve operations, and create content such as a blog or podcast.[[4]](#cite_note-:1-4) One user has used AutoGPT to conduct product research and write a summary on the best headphones.[[10]](#cite_note-:4-10) Another user has used AutoGPT to summarize recent news events and prepare an outline for a podcast.[[10]](#cite_note-:4-10)
+### Other
+[[edit](/w/index.php?title=AutoGPT&action=edit&section=7 "Edit section: Other")]
+
+AutoGPT was used to create ChefGPT, an AI agent able to independently explore the internet to generate and save unique recipes.[[9]](#cite_note-:3-9) AutoGPT was also used to create ChaosGPT, an AI agent tasked to “destroy humanity, establish global dominance, cause chaos and destruction, control humanity through manipulation, and attain immortality”.[[11]](#cite_note-:9-11) ChaosGPT reportedly researched nuclear weapons and tweeted disparagingly about humankind.[[11]](#cite_note-:9-11)
+
+Limitations -----------
+
+[[edit](/w/index.php?title=AutoGPT&action=edit&section=8 "Edit section: Limitations")]
+
+AutoGPT is susceptible to frequent mistakes, primarily because it relies on its own feedback, which can compound errors.[[12]](#cite_note-:5-12) In contrast, non-autonomous models can be corrected by users overseeing their outputs.[[12]](#cite_note-:5-12) Furthermore, AutoGPT has a tendency to [hallucinate](/wiki/Hallucination_(artificial_intelligence) "Hallucination (artificial intelligence)") or to present false or misleading information as fact when responding.[[13]](#cite_note-13)
