@@ -1,27 +1,32 @@
-from chromadb import Client
-from chromadb.config import Settings
+from chromadb import PersistentClient
 from typing import Union, Callable, Literal, List, Any, Dict
 from sentence_transformers import SentenceTransformer
 from ...types.core import TextData
 from ..utils.markdown_splitter import MarkdownSplitter
 from ...utils.logging_config import setup_logger
+from ..base import BaseDataStore
 
 logger = setup_logger(__name__)
 
-class TextStore:
+class TextStore(BaseDataStore):
     def __init__(
         self,
         collection_name: str = "text_store",
         embedding_function: Union[Literal['default'], Callable[[str], List[float]]] = 'default',
     ):
-        self.chroma_client = Client(Settings(chroma_db_impl="duckdb+parquet", persist_directory=".chroma"))
-        self.collection = self.chroma_client.get_or_create_collection(collection_name)
+        # Use new PersistentClient
+        self.chroma_client = PersistentClient(path=".chroma")  # persistent storage in .chroma folder
+        self.collection = self.chroma_client.get_or_create_collection(name=collection_name)
 
         if embedding_function == 'default':
             self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
             self.embedding_function = lambda x: self.embedding_model.encode([x])[0]
         else:
             self.embedding_function = embedding_function
+
+    @property
+    def source_data_type(self):
+        return "text_data"
 
     def store(self, data: TextData) -> None:
         splitter = MarkdownSplitter(max_length=2000)

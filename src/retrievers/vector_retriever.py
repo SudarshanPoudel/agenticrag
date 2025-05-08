@@ -1,5 +1,5 @@
 from .base import BaseRetriever
-from ..datastores.text_store import TextStore
+from ..datastores.vectorstores.textstore import TextStore
 from ..utils.llm import DEFAULT_LLM
 from ..utils.logging_config import setup_logger
 
@@ -23,7 +23,7 @@ class VectorRetriever(BaseRetriever):
         return TextStore()
 
 
-    def retrieve(self, query:str, **kwargs)->str:
+    def retrieve(self, query:str)->str:
         """
         Args:
             query: Query to search relevant text.
@@ -31,7 +31,8 @@ class VectorRetriever(BaseRetriever):
         chunks = self.data_store.knn_search(query_text=query)
         if len(chunks) > 0:
             logger.debug(f"{len(chunks)} Text chunks, relevant to query `{query}` retrieved by vector retriever")
-            text = "\n\n---\n\n".join([c['_source']['text'] for c in chunks])
+            print(chunks['documents'])
+            text = "\n\n---\n\n".join(chunks['documents'][0])
             with open('retrieved_data/text_data.txt', 'w') as f:
                 f.write(text)
 

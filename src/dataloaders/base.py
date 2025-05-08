@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Union
 
-from ..datastores.sqlstores.base import BaseSQLStore
+from ..datastores.sqlstores.base_sql_store import BaseSQLStore
 from ..datastores.vectorstores.textstore import TextStore
 from ..datastores.sqlstores.metastore import MetaStore
 

@@ -3,7 +3,7 @@ import logging.config
 
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-def setup_logger(name: str, level=logging.DEBUG):
+def setup_logger(name: str, level=logging.INFO):
     """Create and configure a logger."""
     logger = logging.getLogger(name)
     logger.setLevel(level)

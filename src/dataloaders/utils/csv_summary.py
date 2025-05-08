@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from ...utils.llm import DEFAULT_LLM
 from .summary_prompt import SUMMARIZATION_PROMPT
 
-def summarize_csv(file_path:str, metadata:str="")->str:
+def summarize_csv(file_path:str, metadata:str="", use_llm: bool = True)->str:
     if file_path.endswith('.csv'):
         df = pd.read_csv(file_path)
     else:
@@ -40,6 +40,10 @@ def summarize_csv(file_path:str, metadata:str="")->str:
         basic_info["columns"].append(column_info)
         
     basic_json = json.dumps(basic_info, indent=4)
+    
+    if not use_llm:
+        return basic_json
+    
     message_template = ChatPromptTemplate.from_messages(
         [
             SystemMessage(

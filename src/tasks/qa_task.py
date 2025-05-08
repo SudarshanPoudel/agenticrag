@@ -18,10 +18,10 @@ class QATask(BaseTask):
     
     @property
     def description(self):
-        return "This task requires Query as input, it then looks into retrieved_data/text_data.txt and answers user's query"
+        return "This task is capable of answering questions based on given file content. It takes a query and file path as input and returns the answer."
     
-    def execute(self, query:str, **kwargs) -> str:
-        with open('retrieved_data/text_data.txt', 'r') as f:
+    def execute(self, query:str, file_path:str) -> str:
+        with open(file_path, 'r') as f:
             context = f.read()
         system_message = SystemMessage(QA_PROMPT)
         

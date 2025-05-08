@@ -11,3 +11,5 @@ sentence-transformers
 langgraph
 e2b-code-interpreter
 rich
+matplotlib
+seaborn

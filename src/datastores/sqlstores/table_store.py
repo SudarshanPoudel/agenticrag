@@ -1,7 +1,8 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from ...types.core import TableData
-from .base import BaseSQLStore
+from ..base import BaseDataStore
+from .base_sql_store import BaseSQLStore
 from ...utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -13,7 +14,11 @@ class TableDataModel(SQLModel, table=True):
     source: str
     summary: Optional[str] = None
 
-class TableStore(BaseSQLStore):
+class TableStore(BaseDataStore,BaseSQLStore):
+    @property
+    def source_data_type(self):
+        return "table_data"
+    
     def get_model(self):
         return TableDataModel
 

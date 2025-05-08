@@ -26,7 +26,7 @@ class TextLoader(BaseDataLoader):
             description = text_to_desc(text=text)
         data = TextData(name=name, description=description, text=text, source=source)
         self.data_store.store(data=data)
-        metadata = MetaData(type='data_source', name=name, description=description)
+        metadata = MetaData(type=self.data_store.source_data_type, name=name, description=description)
         self.meta_store.store(metadata)
 
 

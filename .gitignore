@@ -2,3 +2,6 @@ __pycache__
 .env
 sqlite.db
 database/
+.chroma
+files
+charts

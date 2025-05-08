@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from .base import BaseSQLStore
+
+from ..base import BaseDataStore
+from .base_sql_store import BaseSQLStore
 from ...types.core import MetaData
 
 class MetaDataModel(SQLModel, table=True):
@@ -9,7 +11,11 @@ class MetaDataModel(SQLModel, table=True):
     name: str
     description: str
 
-class MetaStore(BaseSQLStore):
+class MetaStore(BaseDataStore, BaseSQLStore):
+    @property
+    def source_data_type(self):
+        return "meta_data"
+    
     def get_model(self):
         return MetaDataModel
 

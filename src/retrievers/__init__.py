@@ -1,1 +1,2 @@
 from .vector_retriever import VectorRetriever
+from .table_data_retriever import TableDataRetriever

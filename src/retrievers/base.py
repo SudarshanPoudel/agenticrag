@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from ..datastores.base import BaseDataStore
 from ..utils.logging_config import setup_logger
 logger = setup_logger(__name__)
 
@@ -20,13 +19,13 @@ class BaseRetriever(ABC):
     
     @property
     @abstractmethod
-    def description() -> BaseDataStore:
+    def description() -> str:
         "Return detailed description of retriever, what it does and what it expects as input and it's output"
         pass
 
     @property
     @abstractmethod
-    def data_store() -> BaseDataStore:
+    def data_store():
         "Return Store type that This retriever works on"
         pass
 

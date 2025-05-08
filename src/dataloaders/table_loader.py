@@ -37,5 +37,6 @@ class TableLoader(BaseDataLoader):
         data = TableData(name=name, description=description, path=destination_path, source=source, summary=summary)
         self.data_store.store(data=data)
 
-        metadata = MetaData(type='table', name=name, description=description)
+        metadata = MetaData(type=self.data_store.source_data_type, name=name, description=description)
         self.meta_store.store(data=metadata)
+    
