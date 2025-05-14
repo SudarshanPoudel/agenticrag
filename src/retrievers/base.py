@@ -30,6 +30,6 @@ class BaseRetriever(ABC):
         pass
 
     @abstractmethod
-    def retrieve(self, *args, **kwargs) -> str:
+    async def retrieve(self, *args, **kwargs) -> str:
         """Retrieves data according to given task string"""
         pass

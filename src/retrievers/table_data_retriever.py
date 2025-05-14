@@ -49,10 +49,11 @@ class TableDataRetriever(BaseRetriever):
         messages = base_messages.copy()
 
         for _ in range(max_retries):
-            llm_resp = self.llm.invoke(messages).content
+            llm_resp = self.llm.invoke(messages)
+            messages.append(HumanMessage(content=llm_resp.content))
 
             try:
-                code = parse_code_blobs(llm_resp)
+                code = parse_code_blobs(llm_resp.content)
             except ValueError as e:
                 messages.append(HumanMessage(content=f"Error occurred while parsing code: {e}"))
                 continue

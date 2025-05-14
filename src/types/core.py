@@ -19,6 +19,14 @@ class TableData:
 
 @dataclass
 class MetaData:
-    type: Literal["text", "table"]
+    type: Literal["text", "table", "database"]
     name: str
     description: str
+
+@dataclass
+class DBInfoData:
+    name: str
+    db_structure: str
+    summary: str
+    connection_url: Optional[str] = None
+    connection_url_env_var: Optional[str] = None

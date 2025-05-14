@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
 from sqlmodel import SQLModel, Session, create_engine
 from typing import List, Type
+from sqlmodel import select
 
 from ...utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
 class BaseSQLStore():
-    def __init__(self, db_url="sqlite:///sqlite.db"):
-        self.engine = create_engine(db_url)
+    def __init__(self, connection_url="sqlite:///sqlite.db"):
+        self.engine = create_engine(connection_url)
         SQLModel.metadata.create_all(self.engine)
 
     @abstractmethod
@@ -23,10 +24,15 @@ class BaseSQLStore():
 
     def fetch_all(self) -> List[SQLModel]:
         with Session(self.engine) as session:
-            results = session.query(self.get_model()).all()
+            statement = select(self.get_model())
+            results = session.exec(statement).all()
             return results
 
+
     def fetch(self, **kwargs) -> List[SQLModel]:
+        model = self.get_model()
         with Session(self.engine) as session:
-            results = session.query(self.get_model()).filter_by(**kwargs).all()
+            statement = select(model).filter_by(**kwargs)
+            results = session.exec(statement).all()
             return results
+
