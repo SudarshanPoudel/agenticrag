@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from ..utils.logging_config import setup_logger
+from agentic_rag.utils.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 class BaseTask(ABC):

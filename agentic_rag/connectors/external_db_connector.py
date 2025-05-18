@@ -6,7 +6,6 @@ from agentic_rag.connectors.utils.extract_db_structure import extract_db_structu
 from agentic_rag.stores import ExternalDBStore, MetaStore
 from agentic_rag.types.core import DataFormat
 from agentic_rag.types.schemas import ExternalDBData, MetaData
-from agentic_rag.utils import llm
 from agentic_rag.utils.logging_config import setup_logger
 from agentic_rag.types.exceptions import ConnectorError
 
@@ -47,9 +46,9 @@ class ExternalDBConnector(BaseDataConnector):
             if connection_url_env_var:
                 connection_url = os.getenv(connection_url_env_var)
                 if not connection_url:
-                    raise ValueError(f"Environment variable '{connection_url_env_var}' not found.")
+                    raise ConnectorError(f"Environment variable '{connection_url_env_var}' not found.")
             elif not connection_url:
-                raise ValueError("Either 'connection_url' or 'connection_url_env_var' must be provided.")
+                raise ConnectorError("Either 'connection_url' or 'connection_url_env_var' must be provided.")
 
             logger.info(f"Connecting to database for '{name}'...")
             structure = extract_db_structure(connection_url=connection_url)

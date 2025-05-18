@@ -1,7 +1,10 @@
-import pandas as pd
 import json
 
 def extract_csv_structure(file_path:str)->str:
+    try:
+        import pandas as pd
+    except ImportError:
+        raise ImportError("Pandas is required to extract CSV structure, install it via `pip install pandas`")
     if file_path.endswith('.csv'):
         df = pd.read_csv(file_path)
     else:

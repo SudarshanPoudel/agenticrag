@@ -1,8 +1,10 @@
 from abc import ABC
-from importlib import metadata
-from typing import Type, TypeVar, Generic, Union, Callable, Literal, List, Optional, Dict, Any
-from chromadb import PersistentClient
-from sentence_transformers import SentenceTransformer
+from typing import Type, TypeVar, Generic, Union, Callable, Literal, List, Optional
+
+try:
+    from chromadb import PersistentClient
+except ImportError:
+    raise ImportError("ChromaDB is not installed. Please install it with `pip install chromadb`.")
 
 from agentic_rag.types.core import Vector
 from agentic_rag.types.schemas import VectorData
@@ -31,6 +33,10 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
             raise StoreError("ChromaDB initialization failed.") from e
 
         if embedding_function == 'default':
+            try:
+                from sentence_transformers import SentenceTransformer
+            except ImportError:
+                raise ImportError("SentenceTransformers is not installed, either use own embedding function or install it via `pip install sentence_transformers`.")
             self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
             self.embedding_function = lambda x: self.embedding_model.encode(x)
         else:

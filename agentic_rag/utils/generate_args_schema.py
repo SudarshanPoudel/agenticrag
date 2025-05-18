@@ -1,6 +1,6 @@
 import inspect
 from typing import Any, Dict
-from pydantic import BaseModel, create_model
+from pydantic import create_model
 
 def generate_args_schema_from_method(method):
     """

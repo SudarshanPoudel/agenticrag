@@ -1,7 +1,6 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from .markdown_processor import MarkdownDocumentConverter, MarkdownTableChunks, MarkdownTextChunks
 from typing import List, Union
-from pathlib import Path
 
 class MarkdownSplitter:
     def __init__(self, chunk_size, chunk_overlap=200):

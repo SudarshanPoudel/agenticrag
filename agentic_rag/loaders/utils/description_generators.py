@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
 from agentic_rag.utils.logging_config import setup_logger
@@ -47,6 +46,11 @@ def text_to_desc(text, llm: BaseChatModel):
 
 def csv_to_desc(filepath, llm: BaseChatModel):
     """Generate a short description of a CSV file based on its header and sample data."""
+    try:
+        import pandas as pd
+    except ImportError:
+        raise ImportError("Pandas is required to use generate tabular files description, install it via `pip install pandas`")
+    
     df = pd.read_csv(filepath, nrows=5)  # Read first 5 rows for context
     column_names = df.columns.tolist()
     sample_data = df.head(3).to_dict(orient="records") 

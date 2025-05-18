@@ -1,11 +1,14 @@
 import json
 import os
 import re
-import pandas as pd
-
 from sqlalchemy import text, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
+
+try:
+    import pandas as pd
+except ImportError:
+    raise ImportError("Pandas is required to use SQLRetriever, install it via `pip install pandas`")
 
 from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage

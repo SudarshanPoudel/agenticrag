@@ -1,4 +1,3 @@
-import asyncio
 import nest_asyncio
 nest_asyncio.apply()
 
@@ -6,15 +5,19 @@ import sys
 if "twisted.internet.reactor" in sys.modules:
     del sys.modules["twisted.internet.reactor"]
 
-import scrapy
-from scrapy.crawler import CrawlerProcess
-from scrapy.spiders import Spider
-from scrapy.http import Response
-from markdownify import markdownify
+
 
 
 def scrape_web(url: str) -> str:
-    """Scrape and return Markdown content from a website (Jupyter-compatible)"""
+    """Scrape and return Markdown content from a website"""
+    try:
+        from scrapy.crawler import CrawlerProcess
+        from scrapy.spiders import Spider
+        from scrapy.http import Response
+        from markdownify import markdownify
+    except ImportError:
+        raise ImportError("Scrapy and markdownify are required to scrape web pages, install it via `pip install Scrapy markdownify`")
+
     results = {"markdown": ""}
 
     class TextExtractionSpider(Spider):

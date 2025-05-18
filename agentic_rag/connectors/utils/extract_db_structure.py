@@ -1,9 +1,8 @@
 from sqlalchemy import create_engine, inspect
 import json
 from langchain.prompts import PromptTemplate
-from agentic_rag.utils.logging_config import setup_logger
 from langchain_core.language_models.chat_models import BaseChatModel
-
+from agentic_rag.utils.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 

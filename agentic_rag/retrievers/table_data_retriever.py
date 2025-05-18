@@ -1,9 +1,15 @@
-import logging
-import time
-
 from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.language_models.chat_models import BaseChatModel
+
+try:
+    import pandas
+    import matplotlib
+except ImportError:
+    raise ImportError(
+        "Pandas and Matplotlib are required to use TableDataRetriever. Install them via `pip install pandas matplotlib`."
+    )
+
 
 from agentic_rag.types.core import DataFormat
 from agentic_rag.utils.prompts import DATA_RETRIEVER_SYSTEM_PROMPT
@@ -11,6 +17,9 @@ from agentic_rag.utils.helpers import parse_code_blobs
 from agentic_rag.stores import TableStore
 from agentic_rag.utils.local_sandbox_executor import LocalPythonExecutor
 from agentic_rag.retrievers.base import BaseRetriever
+from agentic_rag.utils.logging_config import setup_logger
+
+logger = setup_logger(__name__)
 
 
 class TableDataRetriever(BaseRetriever):

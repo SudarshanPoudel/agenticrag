@@ -1,13 +1,15 @@
 SQLAlchemy==2.0.41
-chromadb==1.0.9
-sentence-transformers==4.1.0
-pytest==8.3.5
-pandas==2.2.3
-Scrapy==2.13.0
-markdownify==1.1.0
+numpy
+pydantic
+chromadb==1.0.9 # Optional
+sentence-transformers==4.1.0 #Optional
+pytest==8.3.5 #Dev only
+pandas==2.2.3 # Optional
+Scrapy==2.13.0 # Optional
+markdownify==1.1.0 # Optional
 Markdown==3.8 
+beautifulsoup4
 langchain==0.3.25
-langchain-google-genai==2.1.4
+langchain-google-genai==2.1.4 # Optional
 langchain-text-splitters
-matplotlib
-psycopg2
+matplotlib # Optional
