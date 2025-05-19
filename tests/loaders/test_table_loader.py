@@ -24,9 +24,9 @@ def temp_csv_file():
 
 @pytest.fixture
 def table_loader(tmp_path, real_table_store, real_meta_store):
-    persistence_folder = tmp_path / "saved_csvs"
+    persistence_dir = tmp_path / "saved_csvs"
     return TableLoader(
-        persistence_folder=str(persistence_folder),
+        persistence_dir=str(persistence_dir),
         store=real_table_store,
         meta_store=real_meta_store
     )
@@ -34,8 +34,8 @@ def table_loader(tmp_path, real_table_store, real_meta_store):
 def test_load_csv(temp_csv_file, table_loader):
     table_loader.load_csv(temp_csv_file)
 
-    table_data = table_loader.store.fetch_all()
-    meta_data = table_loader.meta_store.fetch_all()
+    table_data = table_loader.store.get_all()
+    meta_data = table_loader.meta_store.get_all()
 
     assert any(isinstance(td, TableData) and td.structure_summary for td in table_data)
     assert any(isinstance(md, MetaData) and md.format == DataFormat.TABLE for md in meta_data)

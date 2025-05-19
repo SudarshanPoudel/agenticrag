@@ -28,15 +28,15 @@ def real_meta_store():
 @pytest.fixture
 def text_loader(real_text_store, real_meta_store):
     return TextLoader(
-        text_store=real_text_store,
+        store=real_text_store,
         meta_store=real_meta_store,
     )
 
 def test_load_text(text_loader):
     text_loader.load_text(text="This is a test paragraph repeated. " * 3, name="sample")
 
-    chunks = text_loader.text_store.fetch_all()
-    metas = text_loader.meta_store.fetch_all()
+    chunks = text_loader.store.get_all()
+    metas = text_loader.meta_store.get_all()
 
     assert len(chunks) > 0
     assert all(isinstance(chunk, TextData) for chunk in chunks)
@@ -50,8 +50,8 @@ def test_load_text(text_loader):
 def test_load_web(text_loader):
     text_loader.load_web("https://en.wikipedia.org/wiki/Example")
 
-    chunks = text_loader.text_store.fetch_all()
-    metas = text_loader.meta_store.fetch_all()
+    chunks = text_loader.store.get_all()
+    metas = text_loader.meta_store.get_all()
 
     assert len(chunks) > 0
     assert any(isinstance(chunk, TextData) for chunk in chunks)
