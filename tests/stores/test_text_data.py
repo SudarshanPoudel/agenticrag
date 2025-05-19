@@ -2,9 +2,9 @@ import pytest
 import numpy as np
 import shutil
 from typing import List
-from agentic_rag.types.schemas import TextData
+from agenticrag.types.core import TextData
 import random
-from agentic_rag.stores.text_store import TextStore
+from agenticrag.stores.text_store import TextStore
 
 @pytest.fixture(params=['custom', 'default'])
 def text_store(request):

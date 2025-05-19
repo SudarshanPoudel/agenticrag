@@ -1,15 +1,20 @@
-SQLAlchemy==2.0.41
-numpy
-pydantic
-chromadb==1.0.9 # Optional
-sentence-transformers==4.1.0 #Optional
-pytest==8.3.5 #Dev only
-pandas==2.2.3 # Optional
-Scrapy==2.13.0 # Optional
-markdownify==1.1.0 # Optional
-Markdown==3.8 
+SQLAlchemy>=2.0.0
+numpy>=1.24
+pydantic>=2.0
 beautifulsoup4
-langchain==0.3.25
-langchain-google-genai==2.1.4 # Optional
+langchain>=0.3.25
 langchain-text-splitters
-matplotlib # Optional
+Markdown>=3.4
+
+# Optional for minimal installation
+chromadb>=1.0.9
+sentence-transformers>=2.2.0
+pandas>=2.2.0
+Scrapy>=2.13.0
+markdownify>=1.1.0
+matplotlib>=3.8.0
+langchain-google-genai>=2.1.4
+docling>= 2.0.0
+
+# Dev
+pytest>=8.0.0

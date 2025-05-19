@@ -1,10 +1,10 @@
 import os
 import tempfile
 import pytest
-from agentic_rag.loaders import TableLoader
-from agentic_rag.types.core import DataFormat
-from agentic_rag.types.schemas import TableData, MetaData
-from agentic_rag.stores import TableStore, MetaStore
+from agenticrag.loaders import TableLoader
+from agenticrag.types.core import DataFormat
+from agenticrag.types.core import TableData, MetaData
+from agenticrag.stores import TableStore, MetaStore
 
 @pytest.fixture
 def real_table_store():

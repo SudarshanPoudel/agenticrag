@@ -1,6 +1,6 @@
 import pytest
-from agentic_rag.stores.table_store import TableStore
-from agentic_rag.types.schemas import TableData
+from agenticrag.stores.table_store import TableStore
+from agenticrag.types.core import TableData
 
 @pytest.fixture
 def store():

@@ -2,10 +2,10 @@ import pytest
 import shutil
 import os
 import random
-from agentic_rag.loaders import TextLoader
-from agentic_rag.types.schemas import TextData, MetaData
-from agentic_rag.types.core import DataFormat
-from agentic_rag.stores import TextStore, MetaStore
+from agenticrag.loaders import TextLoader
+from agenticrag.types.core import TextData, MetaData
+from agenticrag.types.core import DataFormat
+from agenticrag.stores import TextStore, MetaStore
 
 @pytest.fixture
 def real_text_store():

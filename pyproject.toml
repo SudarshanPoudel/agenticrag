@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agenticrag"
+version = "0.1.2"
+description = "Modular and extensible Agentic RAG framework"
+authors = [{ name = "Sudarshan Poudel", email = "mailto.supo@email.com" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+
+# Core dependencies (used by minimal install)
+dependencies = [
+    "SQLAlchemy>=2.0.0",
+    "numpy>=1.24",
+    "pydantic>=2.0",
+    "beautifulsoup4",
+    "langchain>=0.3.25",
+    "langchain-text-splitters",
+    "Markdown>=3.4"
+]
+
+[project.optional-dependencies]
+# 'default' is used for plain pip install agenticrag
+default = [
+    "chromadb>=1.0.9",
+    "sentence-transformers>=2.2.0",
+    "pandas>=2.2.0",
+    "Scrapy>=2.13.0",
+    "markdownify>=1.1.0",
+    "matplotlib>=3.8.0",
+    "langchain-google-genai>=2.1.4"
+]
+
+# minimal means core-only (already included above)
+minimal = []
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agenticrag*"]

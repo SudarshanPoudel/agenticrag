@@ -1,8 +1,19 @@
-__pycache__
+# Python packaging artifacts
+*.egg-info/
+build/
+dist/
+
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments 
+.venv/
+venv/
+
+
+# Environment files
 .env
-sqlite.db
-database/
-.chroma
-files
-charts
-retrieved_data
+
+# Data folder used by agenticrag in examples
+.agenticrag_data
