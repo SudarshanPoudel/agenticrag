@@ -80,13 +80,14 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
             logger.error("Failed to get all data: {e}")
             raise StoreError("Get all failed.") from e
 
-    def update(self, id: str, data: SchemaType) -> None:
+    def update(self, id: str, **kwargs) -> None:
         try:
-            embedding = self.embedding_function(data.text)
-            metadata = {k: v for k, v in data.model_dump().items() if k not in {'id', 'text'}}
+            text = kwargs.get("text", None)
+            embedding = self.embedding_function(text) if text else None
+            metadata = {k: v for k, v in kwargs.items() if k not in {'id', 'text'}}
             self.collection.update(
-                documents=[data.text],
-                embeddings=[embedding],
+                documents=[text] if text else None,
+                embeddings=[embedding] if embedding else None,
                 metadatas=[metadata],
                 ids=[id],
             )
@@ -105,12 +106,12 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
 
     def index(self, **kwargs) -> List[SchemaType]:
         try:
-            ids = kwargs.pop("ids", None)
+            id = kwargs.pop("id", None)
             where_filter = {k: v for k, v in kwargs.items() if k not in {"id", "text"} and v is not None}
             if not where_filter:
                 return []
 
-            results = self.collection.get(ids=ids, where=where_filter)
+            results = self.collection.get(ids=[id], where=where_filter)
             return [
                 self.schema(**{"id": rid, "text": doc, **meta})
                 for rid, doc, meta in zip(results["ids"], results["documents"], results["metadatas"])
