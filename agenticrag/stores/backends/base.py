@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, TypeVar, Union
 
 from agenticrag.types.core import BaseData
 
@@ -8,12 +8,12 @@ T = TypeVar("T", bound=BaseData)
 
 class BaseBackend(ABC, Generic[T]):
     @abstractmethod
-    def add(self, data: T) -> None:
+    def add(self, data: T) -> T:
         """Add a data object of type T to the store."""
         pass
 
     @abstractmethod
-    def get(self, id: str) -> Optional[T]:
+    def get(self, id: Union[int, str]) -> Optional[T]:
         """Get a single data object by ID."""
         pass
 
@@ -23,7 +23,7 @@ class BaseBackend(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def update(self, id: str, data: T) -> None:
+    def update(self, id: str, **kwargs) -> None:
         """Update a data object by ID."""
         pass
 
@@ -33,8 +33,8 @@ class BaseBackend(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def index(self, data: T) -> List[T]:
-        """Index or search entries by non-null fields of the data object."""
+    def index(self, **filters) -> List[T]:
+        """Index or search entries filters keys"""
         pass
 
 

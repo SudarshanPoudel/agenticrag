@@ -120,10 +120,10 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
             logger.error(f"Failed to index data: {e}")
             raise StoreError("Indexing failed.") from e
 
-    def search_similar(self, text_query: str, document_name: str, top_k: int = 5) -> List[SchemaType]:
+    def search_similar(self, text_query: str, document_name: str = None, top_k: int = 5) -> List[SchemaType]:
         try:
             embedding = self.embedding_function(text_query)
-            where_filter = {"name": document_name}
+            where_filter = {"name": document_name} if document_name else None
             results = self.collection.query(query_embeddings=[embedding], where=where_filter, n_results=top_k)
 
             return [

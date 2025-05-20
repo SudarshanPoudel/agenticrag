@@ -6,6 +6,7 @@ from agenticrag.connectors.utils.extract_db_structure import extract_db_structur
 from agenticrag.stores import ExternalDBStore, MetaStore
 from agenticrag.types.core import DataFormat
 from agenticrag.types.core import ExternalDBData, MetaData
+from agenticrag.utils.llm import get_default_llm
 from agenticrag.utils.logging_config import setup_logger
 from agenticrag.types.exceptions import ConnectorError
 
@@ -19,7 +20,7 @@ class ExternalDBConnector(BaseDataConnector):
     def __init__(self, store: ExternalDBStore, meta_store: MetaStore, llm:BaseChatModel =None):
         self.store = store
         self.meta_store = meta_store
-        self.llm = llm
+        self.llm = llm or get_default_llm()
 
     def connect_db(
         self,
@@ -55,8 +56,6 @@ class ExternalDBConnector(BaseDataConnector):
             logger.debug(f"Structure extraction successful for '{name}'.")
 
             if not description:
-                if not self.llm:
-                    raise ConnectorError("LLM not provided, so cannot auto-generate description.")
                 description = summarize_db(db_structure=structure, llm = self.llm)
                 logger.debug(f"Auto-generated description for '{name}'.")
 

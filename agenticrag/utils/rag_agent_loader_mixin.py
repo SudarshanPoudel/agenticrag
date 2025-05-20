@@ -77,5 +77,5 @@ class RAGAgentLoaderMixin:
         """
         if not self.external_db_store:
             raise RAGAgentError("External DB store not initialized")
-        connector = ExternalDBConnector(self.external_db_store)
-        return connector.connect(name=name, connection_url=connection_url, connection_url_env_var=connection_url_env_var, description=description)
+        connector = ExternalDBConnector(self.external_db_store, self.meta_store, self.llm)
+        return connector.connect_db(name=name, connection_url=connection_url, connection_url_env_var=connection_url_env_var, description=description)

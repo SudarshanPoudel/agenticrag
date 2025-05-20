@@ -29,7 +29,7 @@ class VectorRetriever(BaseRetriever):
     def working_data_format(self):
         return DataFormat.TEXT
 
-    def retrieve(self, query: str, document_name: str) -> str:
+    def retrieve(self, query: str, document_name: str = None) -> str:
         """
         Retrieve relevant text chunks based on user query.
         """
