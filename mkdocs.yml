@@ -1,0 +1,76 @@
+site_name: Agentic RAG
+site_url: https://github.com/SudarshanPoudel/agenticrag
+repo_name: SudarshanPoudel/agenticrag
+repo_url: https://github.com/SudarshanPoudel/agenticrag
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  icon:
+    repo: fontawesome/brands/github
+
+  favicon: assets/favicon.ico  # Optional, else remove
+
+  features:
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - announce.dismiss
+    - navigation.sections
+    - search.suggest
+    - toc.follow
+
+nav:
+  - Home: README.md
+  - Quickstart: quickstart.md
+  - Modules:
+      - Stores: 01_stores.md
+      - Loaders: 02_loaders.md
+      - Connectors: 03_connectors.md
+      - Retrievers: 04_retrievers.md
+      - Tasks: 05_tasks.md
+      - RAG Agent: 06_ragagent.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+plugins:
+  - search
+
+extra_css:
+  - stylesheets/extra.css

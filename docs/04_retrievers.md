@@ -1,4 +1,4 @@
-# 4. Retrievers
+# Retrievers
 
 Retrievers extract relevant information from stores based on user queries. They are specialized by data type and retrieval method. They are normally used directly by RAG Agent which orchestrates the workflow, so to avoid retrieved data getting lost
 in llm communication, we generally provide a *persistent_dir* where these retrievers save the retrieved data and return a string message saying where retrieved data is instead of actual data.
@@ -118,5 +118,5 @@ class HybridRetriever(BaseRetriever):
 ```
 
 
-**NOTE**
-*While creating custom retrievers be extra careful, have clear name, description as well as clear arguments in .retrieve() method. Only take necessary arguments and avoid use of \*args and \*\*kwargs, if possible values like top_k which can be set by default should be set in constructor instead of .retrieve()*
+!!! note "Note"
+    While creating custom retrievers be extra careful, have clear name, description as well as clear arguments in .retrieve() method. Only take necessary arguments and avoid use of \*args and \*\*kwargs, if possible values like top_k which can be set by default should be set in constructor instead of .retrieve()

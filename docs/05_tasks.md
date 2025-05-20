@@ -1,4 +1,4 @@
-# 5. Tasks
+# Tasks
 
 Tasks are the components that perform operations on retrieved data to accomplish user goals, such as answering questions, generating reports etc.
 
@@ -77,5 +77,5 @@ class SentimentAnalysisTask(BaseTask):
             return "Provided file has negative sentiment with 10%  positive score"
 ```
 
-**NOTE:**
-*Similar to retrieve's .retrieve() method, .execute() should be clear, so much so no llm should be confused when calling this method and when value is returned get clear idea what has been done*
+!!! note "Note"
+    Similar to retrieve's .retrieve() method, .execute() should be clear, so much so no llm should be confused when calling this method and when value is returned get clear idea what has been done

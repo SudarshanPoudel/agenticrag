@@ -1,4 +1,4 @@
-# 1. Stores
+# Stores
 
 Stores form the foundation of the AgenticRAG system, providing a consistent way to manage various data types. Each store is specialized for a particular data format and typically connects to a storage backend.
 

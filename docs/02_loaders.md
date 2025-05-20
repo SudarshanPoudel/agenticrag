@@ -1,4 +1,4 @@
-# 2. Loaders
+# Loaders
 
 Loaders simplify the process of ingesting data into stores by handling parsing, preprocessing, and metadata generation. They abstract away the complexity of working directly with stores.
 

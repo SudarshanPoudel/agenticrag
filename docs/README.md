@@ -1,19 +1,4 @@
-# AgenticRAG Documentation
-
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Architecture Overview](#architecture-overview)
-- [Quickstart](quickstart.md)
-- [Core Components](01-stores.md)
-  - [1. Stores](01-stores.md)
-  - [2. Loaders](02-loaders.md)
-  - [3. Connectors](03-connectors.md)
-  - [4. Retrievers](04-retrievers.md)
-  - [5. Tasks](05-tasks.md)
-  - [6. RAGAgent](06-ragagent.md)
-- [Examples](/examples)
-
+# AgenticRAG 
 
 ## Introduction
 

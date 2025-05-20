@@ -1,4 +1,4 @@
-# 3. Connectors
+# Connectors
 
 Connectors establish links to external data sources, particularly databases and APIs, allowing the system to query them without importing all data.
 

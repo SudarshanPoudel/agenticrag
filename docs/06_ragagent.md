@@ -1,4 +1,4 @@
-# 6. RAGAgent
+# RAGAgent
 
 The `RAGAgent` is a high-level controller that orchestrates the complete retrieval-augmented generation (RAG) pipeline. It autonomously selects relevant datasets, appropriate retrievers, and task-specific tools to fulfill user queries using an LLM as the decision-making engine.
 

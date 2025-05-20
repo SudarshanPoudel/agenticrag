@@ -1,4 +1,4 @@
-# agenticrag — Quickstart
+# Quickstart
 
 Build powerful Retrieval-Augmented Generation (RAG) applications with minimal or advanced setup using `agenticrag`.
 
@@ -41,10 +41,10 @@ print("Answer:", response.content)
 print("Sources:", [s.name for s in response.datasets])
 ```
 
-**Done. Just load and ask.**
+*Done. Just load and ask.*
 
 
-### Advanced Multi-Source Project
+## Advanced Multi-Source Project
 
 Build a robust, multi-modal RAG pipeline with fully customizable components.
 
@@ -64,14 +64,24 @@ llm = ChatGoogleGenerativeAI(
 )
 
 # Initialize persistent stores
-meta_store = MetaStore(connection_url="sqlite:///project.db")
-text_store = TextStore(persistent_dir="./vector_store", embedding_function="default")
-table_store = TableStore(connection_url="sqlite:///project.db")
-external_db_store = ExternalDBStore(connection_url="sqlite:///project.db")
+meta_store = MetaStore(
+    connection_url="sqlite:///project.db"
+)
+text_store = TextStore(
+    persistent_dir="./vector_store", embedding_function="default"
+)
+table_store = TableStore(
+    connection_url="sqlite:///project.db"
+)
+external_db_store = ExternalDBStore(
+    connection_url="sqlite:///project.db"
+)
 
 # Initialize loaders
-text_loader = TextLoader(text_store, meta_store, chunk_size=100, chunk_overlap=20, llm=llm)
-table_loader = TableLoader(table_store, meta_store, persistence_dir="./tables", llm=llm)
+text_loader = TextLoader(
+    text_store, meta_store, chunk_size=100, chunk_overlap=20, llm=llm)
+table_loader = TableLoader(
+    table_store, meta_store, persistence_dir="./tables", llm=llm)
 
 # Connect external DB
 db_connector = ExternalDBConnector(external_db_store, meta_store, llm=llm)
@@ -79,12 +89,18 @@ db_connector = ExternalDBConnector(external_db_store, meta_store, llm=llm)
 # Load data
 text_loader.load_pdf("./docs.pdf")
 table_loader.load_csv("./data/metrics.csv")
-db_connector.connect_db(name="analytics", connection_url_env_var="ANALYTICS_DB_URL")
+db_connector.connect_db(
+    name="analytics", 
+    connection_url_env_var="ANALYTICS_DB_URL"
+)
 
 # Initialize retrievers
-vector_retriever = VectorRetriever(text_store, persistent_dir="./retrieved_data")
-table_retriever = TableRetriever(table_store, persistent_dir="./retrieved_data")
-sql_retriever = SQLRetriever(external_db_store, persistent_dir="./retrieved_data")
+vector_retriever = VectorRetriever(
+    text_store, persistent_dir="./retrieved_data")
+table_retriever = TableRetriever(
+    table_store, persistent_dir="./retrieved_data")
+sql_retriever = SQLRetriever(
+    external_db_store, persistent_dir="./retrieved_data")
 
 # Initialize tasks
 qa_task = QuestionAnsweringTask()
@@ -108,5 +124,5 @@ print("Answer:\n", response.content)
 
 ---
 
-**Tip**
-*You can always start with the minimal setup and gradually plug in your own loaders, retrievers, and task modules as your use case grows.*
+!!! tip "Tip"
+    You can always start with the minimal setup and gradually plug in your own loaders, retrievers, and task modules as your use case grows.
