@@ -8,6 +8,8 @@ AgenticRAG is a modular framework for building customizable Retrieval-Augmented 
 
 ![agenticrag](agenticrag.png)
 
+---
+
 ## Key Features
 
 - **Modular Architecture**: Easily customize any component while maintaining system compatibility
@@ -16,6 +18,8 @@ AgenticRAG is a modular framework for building customizable Retrieval-Augmented 
 - **Intelligent Retrieval**: Use semantic search, SQL queries, or table operations as needed
 - **Task-oriented Design**: Perform question answering, chart generation, or custom operations
 - **Easy Extensibility**: Create custom components with minimal boilerplate
+
+---
 
 ## Installation
 
@@ -37,6 +41,7 @@ cd agenticrag
 pip install -r requirements.txt
 pip install -e .
 ```
+---
 
 ## Quick Start
 
@@ -55,6 +60,8 @@ response = agent.invoke("What were our top selling products last quarter?")
 print(response)
 ```
 
+---
+
 ## Architecture Overview
 ![AgenticRAG Architecture](docs/architecture.png)
 
@@ -67,12 +74,16 @@ The AgenticRAG system follows a modular, layered architecture where each compone
 4. **Task Execution Layer**: Tasks perform operations using retrieved context
 5. **Orchestration Layer**: RAGAgent coordinates all components to fulfill user requests
 
+---
+
 ## Documentation
 
 For detailed documentation, check out:
 
-- [Full Documentation](docs/docs.md): Complete guide to architecture and components
+- [Full Documentation](https://sudarshanpoudel.github.io/agenticrag/): Complete guide to architecture and components
 - [Examples](examples/): Jupyter notebooks showing various use cases
+
+---
 
 ## Project Structure
 
@@ -95,6 +106,8 @@ For detailed documentation, check out:
 ├── README.md                  # This file
 └── requirements.txt           # Development dependencies
 ```
+
+---
 
 ## Example Use Cases
 
@@ -123,6 +136,8 @@ agent.load_csv("Iris.csv")
 agent.invoke("Create a scatter plot showing petel length and width of Iris")
 ```
 
+---
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -132,6 +147,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+---
 
 ## License
 
