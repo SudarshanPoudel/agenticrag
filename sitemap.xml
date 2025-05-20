@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/01_stores/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/02_loaders/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/03_connectors/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/04_retrievers/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/05_tasks/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/06_ragagent/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SudarshanPoudel/agenticrag/quickstart/</loc>
+         <lastmod>2025-05-20</lastmod>
+    </url>
+</urlset>
