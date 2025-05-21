@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agenticrag"
-version = "0.1.4"
+version = "0.2"
 description = "Modular and extensible Agentic RAG library"
 authors = [{ name = "Sudarshan Poudel", email = "mailto.supo@email.com" }]
 readme = "README.md"
