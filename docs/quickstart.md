@@ -9,12 +9,7 @@ Build powerful Retrieval-Augmented Generation (RAG) applications with minimal or
 pip install agenticrag
 ```
 
-!!! tip "Tip"
-    If you are planning on full customization you can install minimal version with `pip install agenticrag[minimal]`. 
-    This excludes optional dependencies, giving you full control over which libraries to install based on your needs.
-
-
-## Quick RAGAgent Setup
+## Minimal RAGAgent Setup
 
 This is the simplest way to get started. Just create an agent, load some data (PDFs, webpages), and invoke queries.
 

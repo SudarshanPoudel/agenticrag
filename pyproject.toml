@@ -9,12 +9,8 @@ description = "Modular and extensible Agentic RAG library"
 authors = [{ name = "Sudarshan Poudel", email = "mailto.supo@email.com" }]
 readme = "README.md"
 license = { file = "LICENSE" }
-default-optional-dependency-keys = [
-    "default",
-]
 requires-python = ">=3.8"
 
-# Core dependencies (used by minimal install)
 dependencies = [
     "SQLAlchemy>=2.0.0",
     "numpy>=1.24",
@@ -22,12 +18,7 @@ dependencies = [
     "beautifulsoup4",
     "langchain>=0.3.25",
     "langchain-text-splitters",
-    "Markdown>=3.4"
-]
-
-[project.optional-dependencies]
-# 'default' is used for plain pip install agenticrag
-default = [
+    "Markdown>=3.4",
     "chromadb>=1.0.9",
     "sentence-transformers>=2.2.0",
     "pandas>=2.2.0",
@@ -35,11 +26,9 @@ default = [
     "markdownify>=1.1.0",
     "matplotlib>=3.8.0",
     "langchain-google-genai>=2.1.4"
-    "docling>=2.0.0"
+    "docling">=2.0.0
 ]
 
-# minimal means core-only (already included above)
-minimal = []
 
 [project.urls]
 Documentation = "https://github.com/yourusername/AgenticRAG/tree/main/docs"
