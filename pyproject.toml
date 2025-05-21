@@ -25,14 +25,14 @@ dependencies = [
     "Scrapy>=2.13.0",
     "markdownify>=1.1.0",
     "matplotlib>=3.8.0",
-    "langchain-google-genai>=2.1.4"
-    "docling">=2.0.0
+    "langchain-google-genai>=2.1.4",
+    "docling>=2.0.0"
 ]
 
 
 [project.urls]
-Documentation = "https://github.com/yourusername/AgenticRAG/tree/main/docs"
-Repository = "https://github.com/yourusername/AgenticRAG"
+Documentation = "https://sudarshanpoudel.github.io/agenticrag/"
+Repository = "https://github.com/SudarshanPoudel/agenticrag.git"
 
 [tool.setuptools]
 include-package-data = true
