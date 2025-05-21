@@ -4,9 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-AgenticRAG is a modular framework for building customizable Retrieval-Augmented Generation systems. It provides a complete stack for ingesting, storing, retrieving, and acting on diverse data types through a unified interface.
+AgenticRAG is a modular library for building customizable Retrieval-Augmented Generation systems. It provides a complete stack for ingesting, storing, retrieving, and acting on diverse data types through a unified interface.
 
-![agenticrag](agenticrag.png)
+![agenticrag](https://raw.githubusercontent.com/SudarshanPoudel/agenticrag/main/agenticrag.png)
 
 ---
 
@@ -39,7 +39,6 @@ Clone the repository and install development dependencies:
 git clone https://github.com/yourusername/agenticrag.git
 cd agenticrag
 pip install -r requirements.txt
-pip install -e .
 ```
 ---
 
@@ -63,7 +62,7 @@ print(response)
 ---
 
 ## Architecture Overview
-![AgenticRAG Architecture](docs/architecture.png)
+![AgenticRAG Architecture](https://raw.githubusercontent.com/SudarshanPoudel/agenticrag/main/docs/architecture.png)
 
 
 The AgenticRAG system follows a modular, layered architecture where each component has specific responsibilities:

@@ -1,11 +1,5 @@
 from abc import ABC
 from typing import Type, TypeVar, Generic, Union, Callable, Literal, List, Optional
-
-try:
-    from chromadb import PersistentClient
-except ImportError:
-    raise ImportError("ChromaDB is not installed. Please install it with `pip install chromadb`.")
-
 from agenticrag.types.core import Vector
 from agenticrag.types.core import VectorData
 from agenticrag.utils.logging_config import setup_logger
@@ -23,6 +17,11 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
         persistent_dir: str = ".chroma",
         embedding_function: Union[Literal['default'], Callable[[str], Vector]] = 'default',
     ):
+                
+        try:
+            from chromadb import PersistentClient
+        except ImportError:
+            raise ImportError("ChromaDB is not installed. Please install it with `pip install chromadb`.")
         self.schema = schema
         try:
             logger.info(f"Initializing ChromaDB client at {persistent_dir}")

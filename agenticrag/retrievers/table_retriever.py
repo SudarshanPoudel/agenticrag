@@ -3,15 +3,6 @@ from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplat
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.language_models.chat_models import BaseChatModel
 
-
-try:
-    import pandas
-    import matplotlib
-except ImportError:
-    raise ImportError(
-        "Pandas and Matplotlib are required to use TableRetriever. Install them via `pip install pandas matplotlib`."
-    )
-
 from agenticrag.types.core import DataFormat
 from agenticrag.retrievers.utils.prompts import DATA_RETRIEVER_SYSTEM_PROMPT
 from agenticrag.utils.helpers import parse_code_blobs
@@ -31,6 +22,14 @@ class TableRetriever(BaseRetriever):
     """
 
     def __init__(self, store: TableStore = None, llm: BaseChatModel = None, persistent_dir: str = ".agenticrag_data/retrieved_data"):
+
+        try:
+            import pandas
+            import matplotlib
+        except ImportError:
+            raise ImportError(
+                "Pandas and Matplotlib are required to use TableRetriever. Install them via `pip install pandas matplotlib`."
+            )
         self.store = store or TableStore()
         self.llm = llm or get_default_llm()
         self.persistent_dir = persistent_dir

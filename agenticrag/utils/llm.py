@@ -2,11 +2,15 @@
 
 import os
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-
 load_dotenv()
 
 def get_default_llm():
+    try:
+        from langchain_google_genai import ChatGoogleGenerativeAI
+    except ImportError:
+        raise ImportError(
+            "langchain_google_genai is required to use the default LLM. Install it via `pip install langchain-google-genai`."
+        )
     gemini_api_key = os.getenv("GEMINI_API_KEY")
     if not gemini_api_key:
         raise EnvironmentError(

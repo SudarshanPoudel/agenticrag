@@ -24,6 +24,7 @@ The AgenticRAG system follows a modular, layered architecture where each compone
 5. **Orchestration Layer**: RAGAgent coordinates all components to fulfill user requests
 
 This design follows key principles:
+
 - **Separation of concerns**: Each component handles distinct responsibilities
 - **Extensibility**: Custom implementations can be created for any component
 - **Loose coupling**: Components interact through well-defined interfaces

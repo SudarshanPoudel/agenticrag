@@ -9,7 +9,12 @@ Build powerful Retrieval-Augmented Generation (RAG) applications with minimal or
 pip install agenticrag
 ```
 
-## Minimal RAGAgent Setup
+!!! tip "Tip"
+    If you are planning on full customization you can install minimal version with `pip install agenticrag[minimal]`. 
+    This excludes optional dependencies, giving you full control over which libraries to install based on your needs.
+
+
+## Quick RAGAgent Setup
 
 This is the simplest way to get started. Just create an agent, load some data (PDFs, webpages), and invoke queries.
 
@@ -105,13 +110,12 @@ sql_retriever = SQLRetriever(
 # Initialize tasks
 qa_task = QuestionAnsweringTask()
 chart_task = ChartGenerationTask()
-report_task = ReportGenerationTask()
 
 # Create the custom agent
 agent = RAGAgent(
     persistent_dir="./project_data",
     retrievers=[vector_retriever, table_retriever, sql_retriever],
-    tasks=[qa_task, chart_task, report_task]
+    tasks=[qa_task, chart_task]
 )
 
 # Invoke with a complex prompt

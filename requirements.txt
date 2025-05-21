@@ -5,6 +5,7 @@ beautifulsoup4
 langchain>=0.3.25
 langchain-text-splitters
 Markdown>=3.4
+python-dotenv>=1.0
 
 # Optional for minimal installation
 chromadb>=1.0.9

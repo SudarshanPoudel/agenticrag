@@ -4,11 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agenticrag"
-version = "0.1.2"
-description = "Modular and extensible Agentic RAG framework"
+version = "0.1.4"
+description = "Modular and extensible Agentic RAG library"
 authors = [{ name = "Sudarshan Poudel", email = "mailto.supo@email.com" }]
 readme = "README.md"
 license = { file = "LICENSE" }
+default-optional-dependency-keys = [
+    "default",
+]
 requires-python = ">=3.8"
 
 # Core dependencies (used by minimal install)
@@ -32,10 +35,15 @@ default = [
     "markdownify>=1.1.0",
     "matplotlib>=3.8.0",
     "langchain-google-genai>=2.1.4"
+    "docling>=2.0.0"
 ]
 
 # minimal means core-only (already included above)
 minimal = []
+
+[project.urls]
+Documentation = "https://github.com/yourusername/AgenticRAG/tree/main/docs"
+Repository = "https://github.com/yourusername/AgenticRAG"
 
 [tool.setuptools]
 include-package-data = true
