@@ -18,3 +18,4 @@ venv/
 # Data folder used by agenticrag in examples
 .agenticrag_data
 .agenticrag_data_custom
+example_agenticrag_data

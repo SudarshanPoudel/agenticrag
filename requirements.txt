@@ -14,6 +14,8 @@ markdownify>=1.1.0
 matplotlib>=3.8.0
 langchain-google-genai>=2.1.4
 docling>= 2.0.0
-
+nest_asyncio>=1.5.4,<2.0
+protoc <= 3.19.0
+streamlit
 # Dev
 pytest>=8.0.0

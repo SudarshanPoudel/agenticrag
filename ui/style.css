@@ -1,0 +1,5 @@
+.stTabs [data-baseweb="tab"] *{
+    font-size: 20px;
+    font-weight: bold;
+    width: 25vw;
+}

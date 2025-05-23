@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Dict, List, Union
 import re
 import json
 import ast
@@ -32,7 +32,7 @@ def extract_blocks_from_llm_response(content: str, start_sep: str, end_sep: str,
     blocks = [m.strip() for m in matches]
     return blocks if multiple else (blocks[0] if blocks else "")
 
-def extract_json_blocks(content: str, multiple: bool = False) -> Union[List[dict], dict]:
+def extract_json_blocks(content: str, multiple: bool = False) -> Union[List[Dict], Dict]:
     """
     Extract and parse JSON blocks from a string.
     """

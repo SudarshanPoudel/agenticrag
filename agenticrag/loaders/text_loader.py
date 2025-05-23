@@ -104,7 +104,7 @@ class TextLoader(BaseLoader):
             logger.error(f"Failed to load from web '{url}': {e}")
             raise 
 
-    def load_pdf(self, path:str, name: str = None, description: str = None) -> str:
+    def load_pdf(self, path:str, name: str = None, description: str = None, source: str = None) -> str:
         """
         Loads a PDF file content into the store.
 
@@ -122,7 +122,7 @@ class TextLoader(BaseLoader):
                 text=pdf_content,
                 name=name,
                 description=description,
-                source=path
+                source=source or path   
             )
         except Exception as e:
             logger.error(f"Failed to load from PDF '{path}': {e}")

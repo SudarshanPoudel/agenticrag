@@ -29,7 +29,7 @@ from functools import wraps
 from importlib import import_module
 from importlib.util import find_spec
 from types import BuiltinFunctionType, FunctionType, ModuleType
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union
 
 
 def truncate_content(content: str, max_length: int = 2000) -> str:
@@ -786,7 +786,7 @@ def evaluate_condition(
     static_tools: Dict[str, Callable],
     custom_tools: Dict[str, Callable],
     authorized_imports: List[str],
-) -> bool | object:
+) -> Union[bool, object]: 
     result = True
     left = evaluate_ast(condition.left, state, static_tools, custom_tools, authorized_imports)
     for i, (op, comparator) in enumerate(zip(condition.ops, condition.comparators)):

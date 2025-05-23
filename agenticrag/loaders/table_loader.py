@@ -22,7 +22,7 @@ class TableLoader(BaseLoader):
     into structured TableStore and MetaStore.
     """
 
-    def __init__(self, store: TableStore, meta_store: MetaStore, persistence_dir: str, llm: BaseChatModel = None):
+    def __init__(self, store: TableStore, meta_store: MetaStore, persistence_dir: str = ".agenticrag_data/tables", llm: BaseChatModel = None):
         """
         Args:
             store (TableStore): Storage handler for table structures.

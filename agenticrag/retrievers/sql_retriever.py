@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from typing import Dict, List
 from sqlalchemy import text, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
@@ -173,7 +174,7 @@ class SQLRetriever(BaseRetriever):
                 return False
         return True
 
-    def _run_query(self, query: str, db: ExternalDBData) -> list[dict]:
+    def _run_query(self, query: str, db: ExternalDBData) -> List[Dict]:
         connection_url = db.connection_url or os.getenv(db.connection_url_env_var or "")
         if not connection_url:
             raise ValueError("No valid connection URL or environment variable found for DB.")
