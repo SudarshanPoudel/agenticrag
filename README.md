@@ -40,6 +40,12 @@ git clone https://github.com/yourusername/agenticrag.git
 cd agenticrag
 pip install -r requirements.txt
 ```
+
+Check out the streamlit demo
+```bash
+streamlit run ui/app.py
+```
+
 ---
 
 ## Quick Start
