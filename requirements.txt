@@ -19,3 +19,4 @@ protoc <= 3.19.0
 streamlit
 # Dev
 pytest>=8.0.0
+pytest-asyncio==1.2.0
