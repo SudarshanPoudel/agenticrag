@@ -3,6 +3,7 @@ from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplat
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.language_models.chat_models import BaseChatModel
 
+from agenticrag.core.storage_manager import StorageManager
 from agenticrag.tasks.base import BaseTask
 from agenticrag.tasks.utils.prompts import CHART_GENERATION_PROMPT
 from agenticrag.loaders.utils.extract_csv_structure import extract_csv_structure
@@ -21,9 +22,9 @@ class ChartGenerationTask(BaseTask):
     It uses an LLM to generate Python code, then safely executes the code to create the chart.
     """
 
-    def __init__(self, llm:BaseChatModel = None, save_charts_at=".agenticrag_data/charts"):
+    def __init__(self,storage_manager: StorageManager, llm:BaseChatModel = None):
         self.llm = llm or get_default_llm()
-        self.save_charts_at = save_charts_at
+        self.save_charts_at = storage_manager.local_dir + "/charts/"
 
     @property
     def name(self):

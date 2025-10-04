@@ -1,5 +1,7 @@
 from abc import ABC
 from typing import Type, TypeVar, Generic, Union, Callable, Literal, List, Optional
+from starlette.concurrency import run_in_threadpool
+from agenticrag.core.storage_manager import StorageManager
 from agenticrag.types.core import Vector
 from agenticrag.types.core import VectorData
 from agenticrag.types.similarity_settings import SimilaritySettings
@@ -15,7 +17,7 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
     def __init__(
         self,
         schema: Type[SchemaType],
-        persistent_dir: str = ".chroma",
+        storage_manager: Union[StorageManager, str] = ".agenticrag_data",
         embedding_function: Union[Literal['default'], Callable[[str], Vector]] = 'default',
         collection_name: str = "vector_store_chroma",
         distance_metric: str = Literal["cosine", "dot_product", "euclidean"],
@@ -27,9 +29,13 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
         
         self.distance_metric = distance_metric
         self.schema = schema
+        if isinstance(storage_manager, str):
+            storage_manager = StorageManager(storage_manager)
+
+        self.storage_manager = storage_manager
         try:
-            logger.info(f"Initializing ChromaDB client at {persistent_dir}")
-            self.chroma_client = PersistentClient(path=persistent_dir)
+            logger.info(f"Initializing ChromaDB client at {self.storage_manager.local_dir}")
+            self.chroma_client = PersistentClient(path=self.storage_manager.local_dir)
             self.collection = self.chroma_client.get_or_create_collection(
                 name=collection_name,
                 distance=distance_metric
@@ -191,3 +197,25 @@ class ChromaBackend(BaseVectorBackend[SchemaType], ABC, Generic[SchemaType]):
         except Exception as e:
             logger.error(f"Search similar failed: {e}")
             raise StoreError("Search similar failed.") from e
+        
+
+    async def aadd(self, data: SchemaType) -> SchemaType:
+        return await run_in_threadpool(self.add, data)
+    
+    async def aget(self, id) -> Optional[SchemaType]:
+        return await run_in_threadpool(self.get, id)
+    
+    async def aget_all(self) -> List[SchemaType]:
+        return await run_in_threadpool(self.get_all)
+    
+    async def aupdate(self, id, text, embedding, metadata):
+        return await run_in_threadpool(self.update, id, text, embedding, metadata)
+    
+    async def adelete(self, id):
+        return await run_in_threadpool(self.delete, id)
+    
+    async def aindex(self, **kwargs):
+        return await run_in_threadpool(self.index, **kwargs)
+    
+    async def asearch_similar(self, text_query, similarity_settings, document_name, **kwargs):
+        return await run_in_threadpool(self.search_similar, text_query, similarity_settings, document_name, **kwargs)

@@ -1,10 +1,11 @@
 import os
-from typing import List
+from typing import List, Optional, Union
 from langchain.tools import StructuredTool
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from agenticrag.core.storage_manager import StorageManager
 from agenticrag.tasks import QuestionAnsweringTask, BaseTask
 from agenticrag.retrievers import BaseRetriever, VectorRetriever, TableRetriever, SQLRetriever
 from agenticrag.stores import TextStore, MetaStore
@@ -27,7 +28,7 @@ class RAGAgent(RAGAgentLoaderMixin):
     def __init__(
         self,
         llm: BaseChatModel = None,
-        persistent_dir: str = ".agenticrag_data",
+        storage_manager: Union[StorageManager, str] = ".agenticrag_data",
         meta_store: MetaStore = None,
         tasks: List[BaseTask] = None,
         retrievers: List[BaseRetriever] = None,
@@ -42,7 +43,9 @@ class RAGAgent(RAGAgentLoaderMixin):
             retrievers (List[BaseRetriever], optional): List of retrievers available to fetch context, if not provided default to VectorRetriever.
         """
         self.llm = llm or get_default_llm()
-        self.persistence_dir = persistent_dir.rstrip("/")
+        if isinstance(storage_manager, str):
+            storage_manager = StorageManager(storage_manager)
+        self.storage_manager = storage_manager
         os.mkdir(self.persistence_dir) if not os.path.exists(self.persistence_dir) else None
         if not tasks:
             tasks = [QuestionAnsweringTask(llm=llm)]
@@ -65,8 +68,8 @@ class RAGAgent(RAGAgentLoaderMixin):
         self.table_store = None
 
         if not retrievers:
-            self.text_store = TextStore(persistent_dir=persistent_dir)
-            retrievers = [VectorRetriever(store=self.text_store, persistent_dir=persistent_dir + "/retrieved_data")]
+            self.text_store = TextStore(self.storage_manager.local_dir)
+            retrievers = [VectorRetriever(store=self.text_store, persistent_dir=self.storage_manager.local_dir + "/retrieved_data")]
         else:
             seen_types = set()
             for retriever in retrievers:

@@ -1,7 +1,7 @@
 import os
 from typing import TypeVar, Generic, List, Optional, Type
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy import create_engine, select, and_
+from sqlalchemy import create_engine, inspect, select, and_
 from sqlalchemy.orm import DeclarativeMeta, declarative_base, sessionmaker, Session
 from agenticrag.types.exceptions import StoreError
 from agenticrag.stores.backends.base import BaseBackend
@@ -15,14 +15,19 @@ ModelType = TypeVar("ModelType", bound=DeclarativeMeta)
 SchemaType = TypeVar("SchemaType", bound=BaseData)
 
 
-class SQLBackend(BaseBackend[SchemaType], Generic[ModelType, SchemaType]):
-    def __init__(self, model: Type[ModelType], schema: Type[SchemaType], connection_url: str, async_url: Optional[str] = None):
+class SQLBackend(BaseBackend[SchemaType], Generic[SchemaType]):
+    def __init__(self, model: DeclarativeMeta, schema: Type[SchemaType], connection_url: str, async_url: Optional[str] = None):
         self.model = model
         self.schema = schema
         try:
             self.engine = create_engine(connection_url, future=True)
             self.SessionLocal = sessionmaker(self.engine, autocommit=False, autoflush=False)
-            Base.metadata.create_all(bind=self.engine)
+            inspector = inspect(self.engine)
+            if not inspector.has_table(self.model.__tablename__):
+                self.model.__table__.create(bind=self.engine)
+            else:
+                self._validate_schema(inspector)
+
             logger.info(f"Sync DB initialized for {model.__name__}")
         except Exception as e:
             logger.error(f"Failed to initialize sync DB engine: {e}")
@@ -32,11 +37,14 @@ class SQLBackend(BaseBackend[SchemaType], Generic[ModelType, SchemaType]):
             try:
                 self.async_engine: AsyncEngine = create_async_engine(async_url, future=True, echo=False)
                 self.AsyncSessionLocal = async_sessionmaker(self.async_engine, expire_on_commit=False)
+
                 import asyncio
                 async def _init_async():
                     async with self.async_engine.begin() as conn:
-                        await conn.run_sync(Base.metadata.create_all)
+                        if not await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table(self.model.__tablename__)):
+                            await conn.run_sync(self.model.__table__.create)
                 asyncio.run(_init_async())
+
                 logger.info(f"Async DB initialized for {model.__name__}")
             except Exception as e:
                 logger.error(f"Failed to initialize async DB engine: {e}")
@@ -44,6 +52,35 @@ class SQLBackend(BaseBackend[SchemaType], Generic[ModelType, SchemaType]):
         else:
             self.async_engine = None
             self.AsyncSessionLocal = None
+
+    def _validate_schema(self, inspector):
+        """
+        Ensure that the DB table matches the SQLAlchemy model.
+        """
+        table_name = self.model.__tablename__
+        db_columns = {col["name"]: col for col in inspector.get_columns(table_name)}
+        model_columns = {col.name: col for col in self.model.__table__.columns}
+
+        # check for missing or extra columns
+        missing_in_db = set(model_columns) - set(db_columns)
+        extra_in_db = set(db_columns) - set(model_columns)
+
+        mismatched_types = []
+        for name, model_col in model_columns.items():
+            if name in db_columns:
+                db_type = str(db_columns[name]["type"])
+                model_type = str(model_col.type)
+                if db_type.lower() != model_type.lower():
+                    mismatched_types.append((name, model_type, db_type))
+
+        if missing_in_db or extra_in_db or mismatched_types:
+            raise StoreError(
+                f"Schema mismatch for table '{table_name}': "
+                f"missing_in_db={missing_in_db}, "
+                f"extra_in_db={extra_in_db}, "
+                f"type_mismatches={mismatched_types}"
+            )
+
 
     def add(self, data: SchemaType) -> SchemaType:
         instance = self.model(**data.model_dump())
