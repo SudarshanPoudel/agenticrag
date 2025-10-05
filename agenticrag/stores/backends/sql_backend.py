@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 
 from agenticrag.types.exceptions import StoreError
 from agenticrag.stores.backends.base import BaseBackend
-from agenticrag.types.core import BaseData
+from agenticrag.types import BaseData
 from agenticrag.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)

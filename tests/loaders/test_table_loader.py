@@ -2,8 +2,8 @@ import os
 import tempfile
 import pytest
 from agenticrag.loaders import TableLoader
-from agenticrag.types.core import DataFormat
-from agenticrag.types.core import TableData, MetaData
+from agenticrag.types import DataFormat
+from agenticrag.types import TableData, MetaData
 from agenticrag.stores import TableStore, MetaStore
 
 @pytest.fixture

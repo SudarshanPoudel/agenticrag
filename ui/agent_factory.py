@@ -3,6 +3,7 @@ import os
 import streamlit as st
 from typing import List
 from agenticrag import RAGAgent
+from agenticrag.core.llm_client import LLMClient
 from agenticrag.loaders import TextLoader, TableLoader
 from agenticrag.connectors import ExternalDBConnector
 from agenticrag.retrievers import TableRetriever, VectorRetriever, SQLRetriever
@@ -44,6 +45,8 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
     if cfg.stores.enable_external_db_store:
         external_db_store = ExternalDBStore(cfg.meta_conn_url)
 
+    llm_model = _get_llm_from_config(cfg.llm)
+
     # loaders/connectors conditional
     text_loader = None
     table_loader = None
@@ -51,16 +54,16 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
     extras = cfg.extras
 
     if text_store:
-        text_loader = TextLoader(store=text_store, meta_store=meta_store, chunk_size=extras.get("text_loader_chunk_size", 2000), chunk_overlap=extras.get("text_loader_chunk_overlap", 200))
+        text_loader = TextLoader(store=text_store, meta_store=meta_store, chunk_size=extras.get("text_loader_chunk_size", 2000), chunk_overlap=extras.get("text_loader_chunk_overlap", 200), llm=llm_model)
         
 
     if table_store:
         tables_dir = os.path.join(cfg.persist_dir, "tables")
         os.makedirs(tables_dir, exist_ok=True)
-        table_loader = TableLoader(store=table_store, meta_store=meta_store, persistence_dir=tables_dir)
+        table_loader = TableLoader(store=table_store, meta_store=meta_store, persistence_dir=tables_dir, llm=llm_model)
 
     if external_db_store:
-        external_db_connector = ExternalDBConnector(store=external_db_store, meta_store=meta_store)
+        external_db_connector = ExternalDBConnector(store=external_db_store, meta_store=meta_store, llm=llm_model)
 
     # retrievers conditional with top_k and persistent_dir
     retrieved_dir = os.path.join(cfg.persist_dir, "retrieved_data")
@@ -73,13 +76,13 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
     sql_retriever = None
 
     if cfg.retrievers.enable_table_retriever and table_store:
-        table_retriever = TableRetriever(store=table_store, persistent_dir=retrieved_dir)
+        table_retriever = TableRetriever(store=table_store, persistent_dir=retrieved_dir, llm=llm_model)
 
     if cfg.retrievers.enable_vector_retriever and text_store:
         vector_retriever = VectorRetriever(store=text_store, persistent_dir=retrieved_dir, top_k=cfg.retrievers.vector_top_k)
 
     if cfg.retrievers.enable_sql_retriever and external_db_store:
-        sql_retriever = SQLRetriever(store=external_db_store, persistent_dir=retrieved_dir)
+        sql_retriever = SQLRetriever(store=external_db_store, persistent_dir=retrieved_dir, llm=llm_model)
 
     for r in [table_retriever, vector_retriever, sql_retriever]:
         if r:
@@ -91,13 +94,13 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
     chart_task = None
 
     if cfg.tasks.enable_qa_task:
-        qa_task = QuestionAnsweringTask()
+        qa_task = QuestionAnsweringTask(llm=llm_model)
         tasks.append(qa_task)
 
     if cfg.tasks.enable_chart_task:
         charts_dir = os.path.join(cfg.persist_dir, "charts")
         os.makedirs(charts_dir, exist_ok=True)
-        chart_task = ChartGenerationTask()
+        chart_task = ChartGenerationTask(llm=llm_model, save_charts_at=charts_dir)
         tasks.append(chart_task)
 
 
@@ -106,7 +109,7 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
         retrievers=retrievers,
         tasks=tasks,
         persistent_dir=cdf(cfg.persist_dir) if False else cfg.persist_dir,
-        llm=_get_llm_from_config(cfg.llm)
+        model=llm_model
     )
 
     components = dict(
@@ -128,4 +131,4 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
 
 
 def _get_llm_from_config(conf):
-    return get_default_llm() #TODO: make this configurable
+    return LLMClient(model="gemini/gemini-2.0-flash", api_key=conf.api_key)

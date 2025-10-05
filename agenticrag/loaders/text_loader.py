@@ -1,7 +1,6 @@
-from langchain_core.language_models.chat_models import BaseChatModel
 import os
 
-from agenticrag.utils.llm import get_default_llm
+from agenticrag.core.llm_client import LLMClient
 
 from .base import BaseLoader
 from agenticrag.loaders.utils.description_generators import text_to_desc
@@ -10,9 +9,9 @@ from agenticrag.loaders.utils.scrape_web import scrape_web
 from agenticrag.loaders.utils.parse_pdf import parse_pdf
 from agenticrag.stores import MetaStore
 from agenticrag.stores.backends.base import BaseVectorBackend
-from agenticrag.types.core import DataFormat
+from agenticrag.types import DataFormat
 from agenticrag.types.exceptions import LoaderError
-from agenticrag.types.core import MetaData, TextData
+from agenticrag.types import MetaData, TextData
 from agenticrag.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -26,14 +25,14 @@ class TextLoader(BaseLoader):
         self,
         store: BaseVectorBackend,
         meta_store: MetaStore,
+        llm: LLMClient,
         chunk_size: int = 2000,
         chunk_overlap: int = 200,
-        llm: BaseChatModel = None
     ):
         self.store = store
+        self.llm = llm 
         self.meta_store = meta_store
         self.splitter = MarkdownSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-        self.llm = llm 
 
     def load_text(self, text: str, name: str, description: str = None, source: str = None) -> MetaData:
         """
@@ -47,8 +46,6 @@ class TextLoader(BaseLoader):
         """
         try:
             if not description:
-                if not self.llm:
-                    self.llm = get_default_llm()
                 description = text_to_desc(text, self.llm)
             if not source:
                 source = name

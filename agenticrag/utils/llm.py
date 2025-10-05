@@ -2,15 +2,11 @@
 
 import os
 from dotenv import load_dotenv
+
+from agenticrag.core import LLMClient
 load_dotenv()
 
 def get_default_llm():
-    try:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-    except ImportError:
-        raise ImportError(
-            "langchain_google_genai is required to use the default LLM. Install it via `pip install langchain-google-genai`."
-        )
     gemini_api_key = os.getenv("GEMINI_API_KEY")
     if not gemini_api_key:
         raise EnvironmentError(
@@ -19,7 +15,7 @@ def get_default_llm():
             "Alternatively, pass a custom LLM (any instance of `BaseChatModel` from `langchain_core` is supported)."
         )
 
-    return ChatGoogleGenerativeAI(
+    return LLMClient(
         model="gemini-2.0-flash",
         api_key=gemini_api_key,
     )

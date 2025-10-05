@@ -3,8 +3,8 @@ import shutil
 import os
 import random
 from agenticrag.loaders import TextLoader
-from agenticrag.types.core import TextData, MetaData
-from agenticrag.types.core import DataFormat
+from agenticrag.types import TextData, MetaData
+from agenticrag.types import DataFormat
 from agenticrag.stores import TextStore, MetaStore
 
 @pytest.fixture

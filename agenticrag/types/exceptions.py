@@ -33,3 +33,8 @@ class TaskExecutionError(AgenticRAGException):
 class ConfigurationError(AgenticRAGException):
     """Raised for invalid or missing configuration."""
     pass
+
+
+class LLMError(AgenticRAGException):
+    """Raised when an LLM operation fails."""
+    pass

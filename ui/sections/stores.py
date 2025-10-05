@@ -1,6 +1,6 @@
 from narwhals import exclude
 import streamlit as st
-from agenticrag.types.core import MetaData, TextData, TableData, ExternalDBData, DataFormat
+from agenticrag.types import MetaData, TextData, TableData, ExternalDBData, DataFormat
 
 def store_section(agent_bundle):
     comps = agent_bundle.components

@@ -3,11 +3,13 @@ import re
 import json
 import ast
 
+from pydantic import BaseModel
+
 
 def format_tool_metadata(tools_dict):
     tool_descriptions = []
     for name, tool in tools_dict.items():
-        params = tool.args_schema.schema().get("properties", {})
+        params = tool.args.schema().get("properties", {})
         param_str = "\n".join([f"    - `{p}`: {details.get('description', 'No description')}" for p, details in params.items()])
         tool_descriptions.append(f"**{name}**: {tool.description}\n  Parameters:\n{param_str}")
     return "\n\n".join(tool_descriptions)
@@ -71,3 +73,7 @@ Code:
 ```py
 # Your python code here
 ```<end_code>""".strip())
+
+
+class FinalAnswerArgsSchema(BaseModel):
+    answer: str 

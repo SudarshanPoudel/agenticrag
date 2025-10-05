@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from agenticrag.stores.backends.sql_backend import Base
 
-from agenticrag.types.core import TableData
+from agenticrag.types import TableData
 from agenticrag.stores.backends.sql_backend import SQLBackend
 
 

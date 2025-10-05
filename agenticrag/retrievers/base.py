@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from agenticrag.types.core import DataFormat
+from agenticrag.types import DataFormat
 from agenticrag.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)

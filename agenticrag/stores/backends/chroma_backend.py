@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Type, TypeVar, Generic, Union, Callable, Literal, List, Optional
-from agenticrag.types.core import Vector
-from agenticrag.types.core import VectorData
+from agenticrag.types import Vector
+from agenticrag.types import VectorData
 from agenticrag.utils.logging_config import setup_logger
 from agenticrag.stores.backends.base import BaseVectorBackend
 from agenticrag.types.exceptions import StoreError

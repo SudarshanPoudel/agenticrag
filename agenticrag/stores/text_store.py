@@ -1,6 +1,6 @@
 from typing import Callable, Literal, List, Union
 from agenticrag.stores.backends.chroma_backend import ChromaBackend
-from agenticrag.types.core import TextData
+from agenticrag.types import TextData
 
 
 class TextStore(ChromaBackend[TextData]):

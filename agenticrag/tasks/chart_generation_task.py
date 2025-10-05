@@ -1,14 +1,11 @@
 import os
-from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
-from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_core.language_models.chat_models import BaseChatModel
-
+from agenticrag.core.llm_client import LLMClient
 from agenticrag.tasks.base import BaseTask
 from agenticrag.tasks.utils.prompts import CHART_GENERATION_PROMPT
 from agenticrag.loaders.utils.extract_csv_structure import extract_csv_structure
+from agenticrag.types.core import BaseMessage
 from agenticrag.utils.local_sandbox_executor import LocalPythonExecutor
 from agenticrag.utils.helpers import parse_code_blobs
-from agenticrag.utils.llm import get_default_llm
 from agenticrag.utils.logging_config import setup_logger
 from agenticrag.types.exceptions import TaskExecutionError
 
@@ -21,8 +18,8 @@ class ChartGenerationTask(BaseTask):
     It uses an LLM to generate Python code, then safely executes the code to create the chart.
     """
 
-    def __init__(self, llm:BaseChatModel = None, save_charts_at=".agenticrag_data/charts"):
-        self.llm = llm or get_default_llm()
+    def __init__(self, llm:LLMClient, save_charts_at=".agenticrag_data/charts"):
+        self.llm = llm
         self.save_charts_at = save_charts_at
 
     @property
@@ -55,19 +52,10 @@ class ChartGenerationTask(BaseTask):
             output_path = f"{self.save_charts_at}/"
             os.makedirs(output_path, exist_ok=True)
 
-            base_messages = ChatPromptTemplate.from_messages(
-                [
-                    SystemMessage(CHART_GENERATION_PROMPT),
-                    HumanMessagePromptTemplate.from_template(
-                        "Query: {query}\nFile Path: {file_path}\nOutput Folder: {output_path}\nFile Structure: {structure}"
-                    ),
-                ]
-            ).format_messages(
-                query=query,
-                file_path=file_path,
-                output_path=output_path,
-                structure=structure,
-            )
+            base_messages = [
+                BaseMessage(role="system", content=CHART_GENERATION_PROMPT),
+                BaseMessage(role="user", content=f"Query: {query}\nFile Path: {file_path}\nOutput Folder: {output_path}\nFile Structure: {structure}")
+            ]
             
             executor = LocalPythonExecutor(
                 additional_authorized_imports=["pandas", "seaborn", "matplotlib"]
@@ -85,10 +73,10 @@ class ChartGenerationTask(BaseTask):
                     return f"Relevant chart saved at {chart_path}"
                 except ValueError as e:
                     logger.info(f"Code parsing failed: {e}")
-                    messages.append(HumanMessage(content=f"Code parsing error: {e}"))
+                    messages.append(BaseMessage(content=f"Code parsing error: {e}"))
                 except Exception as e:
                     logger.info(f"Code execution failed: {e}")
-                    messages.append(HumanMessage(content=f"Code execution error: {e}"))
+                    messages.append(BaseMessage(content=f"Code execution error: {e}"))
 
             return "Failed to generate chart after multiple attempts"
 

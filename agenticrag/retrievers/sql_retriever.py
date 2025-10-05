@@ -12,19 +12,16 @@ try:
 except ImportError:
     raise ImportError("Pandas is required to use SQLRetriever, install it via `pip install pandas`")
 
-from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
-from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_core.language_models.chat_models import BaseChatModel
-
-from agenticrag.types.core import DataFormat
-from agenticrag.types.core import ExternalDBData
+from agenticrag.core.llm_client import LLMClient
+from agenticrag.types.core import BaseMessage
+from agenticrag.types import DataFormat
+from agenticrag.types import ExternalDBData
 from agenticrag.stores import ExternalDBStore
 from agenticrag.types.exceptions import RetrievalError
 from agenticrag.retrievers.base import BaseRetriever
 from agenticrag.utils.helpers import extract_json_blocks
 from agenticrag.retrievers.utils.prompts import TABLE_DECIDER_TEMPLATE, SQL_WRITING_TEMPLATE
 from agenticrag.utils.logging_config import setup_logger
-from agenticrag.utils.llm import get_default_llm
 
 logger = setup_logger(__name__)
 
@@ -35,9 +32,9 @@ class SQLRetriever(BaseRetriever):
     Saves retrieved data as CSV to a persistent folder.
     """
 
-    def __init__(self,  store: ExternalDBStore = None, llm: BaseChatModel = None, persistent_dir: str = ".agenticrag_data/retrieved_data"):
-        self.store = store or ExternalDBStore()
-        self.llm = llm or get_default_llm()
+    def __init__(self,  store: ExternalDBStore, llm: LLMClient, persistent_dir: str = ".agenticrag_data/retrieved_data"):
+        self.store = store 
+        self.llm = llm
         self.persistent_dir = persistent_dir
         os.mkdir(self.persistent_dir) if not os.path.exists(self.persistent_dir) else None
 
@@ -98,12 +95,10 @@ class SQLRetriever(BaseRetriever):
         Use LLM to select relevant tables and fields from database metadata for the query.
         """
         all_tables = ", ".join(metadata.keys())
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(TABLE_DECIDER_TEMPLATE),
-                HumanMessagePromptTemplate.from_template("query: {query}\nTables: [{tables}]"),
-            ]
-        ).format_messages(query=query, tables=all_tables)
+        prompt = [
+            BaseMessage(role="system", content=TABLE_DECIDER_TEMPLATE),
+            BaseMessage(role="user", content=f"Query: {query}\nTables: [{all_tables}]"),
+        ]
 
         llm_response = self.llm.invoke(prompt).content
         tables = extract_json_blocks(llm_response).get("tables", [])
@@ -116,13 +111,10 @@ class SQLRetriever(BaseRetriever):
         Generate an SQL query using the LLM, check safety, execute it and return the results.
         Retries once if execution or generation fails.
         """
-        messages = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(SQL_WRITING_TEMPLATE),
-                HumanMessagePromptTemplate.from_template("query: {query}\nTable and Fields Data: {table_and_fields_data}"),
-            ]
-        ).format_messages(query=query, table_and_fields_data=table_and_fields_data)
-
+        messages = [
+            BaseMessage(role="system", content=SQL_WRITING_TEMPLATE),
+            BaseMessage(role="user", content=f"query: {query}\nTable and Fields Data: {table_and_fields_data}"),
+        ]
         max_retries = 5
         for attempt in range(max_retries + 1):
             llm_response = self.llm.invoke(messages)
@@ -138,7 +130,7 @@ class SQLRetriever(BaseRetriever):
 
             if not self._is_safe_sql(sql_query):
                 logger.debug("Unsafe SQL query detected; retrying.")
-                messages.append(HumanMessage(content="This is not a safe SQL. You only have permission to read data with SELECT."))
+                messages.append(BaseMessage(content="This is not a safe SQL. You only have permission to read data with SELECT."))
                 continue
 
             try:
@@ -146,13 +138,13 @@ class SQLRetriever(BaseRetriever):
                 results = self._run_query(sql_query, db)
                 if not results:
                     logger.info("SQL query returned no data.")
-                    messages.append(HumanMessage(content="No data retrieved."))
+                    messages.append(BaseMessage(content="No data retrieved."))
                     continue
                 return {"sql": sql_query, "explanation": explanation, "data": results}
 
             except Exception as e:
                 logger.error(f"SQL execution error: {e}", exc_info=True)
-                messages.append(HumanMessage(content=f"Error executing SQL: {e}"))
+                messages.append(BaseMessage(content=f"Error executing SQL: {e}"))
 
         return {
             "sql": None,

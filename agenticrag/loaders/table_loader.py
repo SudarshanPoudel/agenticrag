@@ -1,15 +1,13 @@
 import os
 import shutil
-from langchain_core.language_models.chat_models import BaseChatModel
-
+from agenticrag.core.llm_client import LLMClient
 from agenticrag.loaders.base import BaseLoader
 from agenticrag.loaders.utils.description_generators import csv_to_desc
 from agenticrag.loaders.utils.extract_csv_structure import extract_csv_structure
 from agenticrag.stores import MetaStore, TableStore
-from agenticrag.types.core import DataFormat
+from agenticrag.types import DataFormat
 from agenticrag.types.exceptions import LoaderError
-from agenticrag.types.core import MetaData, TableData
-from agenticrag.utils.llm import get_default_llm
+from agenticrag.types import MetaData, TableData
 from agenticrag.utils.logging_config import setup_logger
 
 
@@ -22,7 +20,7 @@ class TableLoader(BaseLoader):
     into structured TableStore and MetaStore.
     """
 
-    def __init__(self, store: TableStore, meta_store: MetaStore, persistence_dir: str = ".agenticrag_data/tables", llm: BaseChatModel = None):
+    def __init__(self, store: TableStore, meta_store: MetaStore, llm: LLMClient, persistence_dir: str = ".agenticrag_data/tables"):
         """
         Args:
             store (TableStore): Storage handler for table structures.
@@ -51,7 +49,6 @@ class TableLoader(BaseLoader):
 
             table_name = name or os.path.basename(file_path)
             if not description:
-                self.llm = get_default_llm()
                 description = csv_to_desc(destination, llm=self.llm)
             table_description = description
             table_source = source or file_path

@@ -1,16 +1,13 @@
 import os
-from langchain_core.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
-from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_core.language_models.chat_models import BaseChatModel
-
-from agenticrag.types.core import DataFormat
+from agenticrag.core.llm_client import LLMClient
+from agenticrag.types import DataFormat
 from agenticrag.retrievers.utils.prompts import DATA_RETRIEVER_SYSTEM_PROMPT
+from agenticrag.types.core import BaseMessage
 from agenticrag.utils.helpers import parse_code_blobs
 from agenticrag.stores import TableStore
 from agenticrag.utils.local_sandbox_executor import LocalPythonExecutor
 from agenticrag.retrievers.base import BaseRetriever
 from agenticrag.utils.logging_config import setup_logger
-from agenticrag.utils.llm import get_default_llm
 
 logger = setup_logger(__name__)
 
@@ -21,7 +18,7 @@ class TableRetriever(BaseRetriever):
     Saves extracted data as CSV to a persistent folder.
     """
 
-    def __init__(self, store: TableStore = None, llm: BaseChatModel = None, persistent_dir: str = ".agenticrag_data/retrieved_data"):
+    def __init__(self, store: TableStore, llm: LLMClient, persistent_dir: str = ".agenticrag_data/retrieved_data"):
 
         try:
             import pandas
@@ -30,8 +27,8 @@ class TableRetriever(BaseRetriever):
             raise ImportError(
                 "Pandas and Matplotlib are required to use TableRetriever. Install them via `pip install pandas matplotlib`."
             )
-        self.store = store or TableStore()
-        self.llm = llm or get_default_llm()
+        self.store = store
+        self.llm = llm 
         self.persistent_dir = persistent_dir
         os.mkdir(self.persistent_dir) if not os.path.exists(self.persistent_dir) else None
 
@@ -61,36 +58,27 @@ class TableRetriever(BaseRetriever):
         table = self.store.index(name=data_name)[0]
         structure = table.structure_summary
         output_path=f"{self.persistent_dir}/table_data.csv",
-        base_messages = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(DATA_RETRIEVER_SYSTEM_PROMPT),
-                HumanMessagePromptTemplate.from_template(
-                    "Query: {query}\nFile Path: {file_path}\nOutput Path: {output_path}\nStructure: {structure}"
-                ),
-            ]
-        ).format_messages(
-            query=query,
-            file_path=table.path,
-            output_path=output_path,
-            structure=structure,
-        )
+        base_messages =[
+            BaseMessage(role="system", content=DATA_RETRIEVER_SYSTEM_PROMPT),
+            BaseMessage(role="user", content=f"Query: {query}\nFile Path: {table.path}\nOutput Path: {output_path}\nStructure: {structure}")
+        ]
 
         messages = base_messages.copy()
 
         for _ in range(max_retries):
             llm_resp = self.llm.invoke(messages)
-            messages.append(HumanMessage(content=llm_resp.content))
+            messages.append(BaseMessage(content=llm_resp.content))
 
             try:
                 code = parse_code_blobs(llm_resp.content)
             except ValueError as e:
-                messages.append(HumanMessage(content=f"Error occurred while parsing code: {e}"))
+                messages.append(BaseMessage(content=f"Error occurred while parsing code: {e}"))
                 continue
 
             try:
                 executor(code)
             except Exception as e:
-                messages.append(HumanMessage(content=f"Error during code execution: {e}"))
+                messages.append(BaseMessage(content=f"Error during code execution: {e}"))
                 continue
 
             return f"Relevant table saved at `{output_path}`"

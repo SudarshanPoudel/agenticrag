@@ -2,7 +2,7 @@ import os
 from agenticrag.retrievers.base import BaseRetriever
 from agenticrag.stores import TextStore
 from agenticrag.utils.logging_config import setup_logger
-from agenticrag.types.core import DataFormat
+from agenticrag.types import DataFormat
 
 logger = setup_logger(__name__)
 

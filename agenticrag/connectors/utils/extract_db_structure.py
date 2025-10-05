@@ -1,7 +1,8 @@
+from click import prompt
 from sqlalchemy import create_engine, inspect
 import json
-from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
+from agenticrag.core.llm_client import LLMClient
+from agenticrag.types.core import BaseMessage
 from agenticrag.utils.logging_config import setup_logger
 from agenticrag.utils.llm import get_default_llm
 logger = setup_logger(__name__)
@@ -46,21 +47,15 @@ def extract_db_structure(connection_url):
 
     return json.dumps(db_structure, indent=2)
 
-def summarize_db(db_structure: str, llm: BaseChatModel = None):
-    llm = llm or get_default_llm()
-    prompt_template = PromptTemplate(
-        input_variables=["columns", "sample_data"],
-        template="""
-        Based on the structure of the database, generate a short description (3-4 lines) explaining what this database is about.
+def summarize_db(db_structure: str, llm: LLMClient):
+    # Generate description
+    prompt = BaseMessage(
+        content=f"""Based on the structure of the database, generate a short description (3-4 lines) explaining what this database is about.
         The description should provide an overall idea about what type of data is available in the database.
         
-        {db_structure}
-        """,
+        {db_structure}"""
     )
-
-    # Generate description
-    formatted_prompt = prompt_template.format(db_structure=db_structure)
-    desc = llm.invoke(formatted_prompt).content
+    desc = llm.invoke(prompt).content
 
     logger.debug(f"Description generated for Database: {desc}")
     return desc

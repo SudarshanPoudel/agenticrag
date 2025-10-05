@@ -1,7 +1,6 @@
 import re
-from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
-from agenticrag.utils.llm import get_default_llm
+from agenticrag.core.llm_client import LLMClient
+from agenticrag.types.core import BaseMessage
 from agenticrag.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -24,16 +23,14 @@ def select_representative_sentences(sentences, num_parts=10, sentences_per_part=
 
     return selected_sentences
 
-def text_to_desc(text, llm: BaseChatModel = None):
+def text_to_desc(text, llm: LLMClient):
     """Generate a short description using selected sentences."""
-    llm = llm or get_default_llm()
     sentences = preprocess_text(text)
     selected_sentences = select_representative_sentences(sentences)
     summary_text = " ".join(selected_sentences)
 
-    prompt_template = PromptTemplate(
-        input_variables=["summary_text"],
-        template="""
+    prompt = BaseMessage(
+        content=f"""
         Given the following representative sentences from a document:
         {summary_text}
         Generate a short description (3-4 lines) explaining what this document is about.
@@ -41,30 +38,27 @@ def text_to_desc(text, llm: BaseChatModel = None):
         """,
     )
 
-    desc = llm.invoke(prompt_template.format(summary_text=summary_text)).content
+    desc = llm.invoke(prompt).content
     logger.debug(f"Description generated for text as : {desc}")
     return desc
 
 
-def csv_to_desc(filepath, llm: BaseChatModel = None):
+def csv_to_desc(filepath, llm: LLMClient):
     """Generate a short description of a CSV file based on its header and sample data."""
     try:
         import pandas as pd
     except ImportError:
         raise ImportError("Pandas is required to use generate tabular files description, install it via `pip install pandas`")
     
-    llm = llm or get_default_llm()
     df = pd.read_csv(filepath, nrows=5)  # Read first 5 rows for context
     column_names = df.columns.tolist()
     sample_data = df.head(3).to_dict(orient="records") 
 
     # Create prompt
-    prompt_template = PromptTemplate(
-        input_variables=["columns", "sample_data"],
-        template="""
+    prompt = BaseMessage(
+        content=f"""
         The following CSV file contains data with the columns:
-        {columns}
-        
+        {", ".join(column_names)}
         Here are some sample rows:
         {sample_data}
         
@@ -74,8 +68,7 @@ def csv_to_desc(filepath, llm: BaseChatModel = None):
     )
 
     # Generate description
-    formatted_prompt = prompt_template.format(columns=", ".join(column_names), sample_data=sample_data)
-    desc = llm.invoke(formatted_prompt).content
+    desc = llm.invoke(prompt).content
 
     logger.debug(f"Description generated for CSV: {desc}")
     return desc

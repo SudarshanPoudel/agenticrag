@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, List, Optional, TypeVar, Union
 
-from agenticrag.types.core import BaseData
+from agenticrag.types import BaseData
 
 T = TypeVar("T", bound=BaseData)
 

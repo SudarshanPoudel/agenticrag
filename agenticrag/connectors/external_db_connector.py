@@ -1,12 +1,10 @@
 import os
-from langchain_core.language_models.chat_models import BaseChatModel
-
 from agenticrag.connectors.base import BaseDataConnector
 from agenticrag.connectors.utils.extract_db_structure import extract_db_structure, summarize_db
+from agenticrag.core.llm_client import LLMClient
 from agenticrag.stores import ExternalDBStore, MetaStore
-from agenticrag.types.core import DataFormat
-from agenticrag.types.core import ExternalDBData, MetaData
-from agenticrag.utils.llm import get_default_llm
+from agenticrag.types import DataFormat
+from agenticrag.types import ExternalDBData, MetaData
 from agenticrag.utils.logging_config import setup_logger
 from agenticrag.types.exceptions import ConnectorError
 
@@ -17,10 +15,10 @@ class ExternalDBConnector(BaseDataConnector):
     """
     Connects to an external database and stores its structure and metadata.
     """
-    def __init__(self, store: ExternalDBStore, meta_store: MetaStore, llm:BaseChatModel =None):
+    def __init__(self, store: ExternalDBStore, meta_store: MetaStore, llm:LLMClient):
         self.store = store
         self.meta_store = meta_store
-        self.llm = llm or get_default_llm()
+        self.llm = llm
 
     def connect_db(
         self,

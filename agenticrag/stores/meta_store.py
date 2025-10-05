@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from agenticrag.stores.backends.sql_backend import Base
 
-from agenticrag.types.core import MetaData
+from agenticrag.types import MetaData
 from agenticrag.stores.backends.sql_backend import SQLBackend
 from agenticrag.types.exceptions import StoreError
 

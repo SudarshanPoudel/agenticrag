@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import shutil
 from typing import List
-from agenticrag.types.core import TextData
+from agenticrag.types import TextData
 import random
 from agenticrag.stores.text_store import TextStore
 

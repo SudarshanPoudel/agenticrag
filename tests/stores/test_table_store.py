@@ -1,6 +1,6 @@
 import pytest
 from agenticrag.stores.table_store import TableStore
-from agenticrag.types.core import TableData
+from agenticrag.types import TableData
 
 @pytest.fixture
 def store():
