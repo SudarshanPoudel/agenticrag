@@ -1,154 +1,72 @@
-import sys
-import os
-import re
-
-from httpx import get
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import torch
-torch.classes.__path__ = []
-
-from agenticrag import RAGAgent
-from agenticrag.loaders import TextLoader, TableLoader
-from agenticrag.connectors import ExternalDBConnector
-from agenticrag.retrievers import TableRetriever, VectorRetriever, SQLRetriever
-from agenticrag.tasks import QuestionAnsweringTask, ChartGenerationTask
-from agenticrag.stores import TextStore, MetaStore, TableStore, ExternalDBStore, meta_store
+torch.classes.__path__ = []  # suppress torch dynamic class path
 
 import streamlit as st
-import tempfile
-
-from ui.cache_bundle import get_agent
-
-
-def chat_section(agent):
-    st.subheader("💬 Ask Your Agent")
-    user_input = st.text_input("Ask your question:", key="chat_input")
-    if user_input:
-        st.markdown(f"**You :** {user_input}")
-        agent = get_agent().agent
-        response = agent.invoke(user_input)
-
-        
-        markdown_content = response.content
-        match = re.search(r'!\[.*?\]\((.*?)\)', markdown_content)
-        cleaned_markdown = re.sub(r'!\[.*?\]\((.*?)\)', '', markdown_content)
-        st.markdown(cleaned_markdown.strip())
-
-        if match:
-            image_path = match.group(1)
-            st.image(image_path)
-
-        if response.datasets:
-            st.markdown("#### 📂 Datasets used:")
-            for ds in response.datasets:
-                st.markdown(f"- **{ds.name}** — {ds.description}")
-
-        # Show tasks
-        if response.tasks:
-            st.markdown("#### 🔧 Tasks performed:")
-            for task in response.tasks:
-                st.markdown(f"- `{task.__class__.__name__}`")
-
-
-def loader_section(agent):
-    st.subheader("📥 Load Data into Agent")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown("#### Load PDF")
-        pdf_name = st.text_input("Enter PDF name (Optional)", key="pdf_name")
-        uploaded_pdf = st.file_uploader("Upload PDF", type=["pdf"], key="pdf_upload")
-        if uploaded_pdf and st.button("Load PDF"):
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-                tmp_file.write(uploaded_pdf.read())
-                temp_file_path = tmp_file.name
-                try:
-                    get_agent().text_loader.load_pdf(temp_file_path, name=pdf_name or uploaded_pdf.name, source="UPLOADED : " + uploaded_pdf.name) 
-                    st.success(f"Loaded PDF: {uploaded_pdf.name}")
-                except Exception as e:
-                    st.error(f"Failed to load PDF: {e}")
-
-        st.markdown("#### Website URL")
-        website_name = st.text_input("Enter website name (Optional)", key="web_name")
-        website_url = st.text_input("Enter website URL", key="web_input")
-        if website_url and st.button("Load Website"):
-            try:
-                get_agent().text_loader.load_web(website_url, name = website_name)
-                st.success(f"Loaded website: {website_url}")
-            except Exception as e:
-                st.error(f"Failed to load website: {e}")
-
-    with col2:
-        st.markdown("#### Load CSV")
-        csv_name = st.text_input("Enter CSV name (Optional)", key="csv_name")
-        uploaded_csv = st.file_uploader("Upload CSV", type=["csv"], key="csv_upload")
-        if uploaded_csv and st.button("Load CSV"):
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
-                tmp_file.write(uploaded_csv.read())
-                temp_file_path = tmp_file.name
-                try:
-                    get_agent().table_loader.load_csv(temp_file_path, name=csv_name or uploaded_csv.name, source="UPLOADED : " + uploaded_csv.name)
-                    st.success(f"Loaded CSV: {uploaded_csv.name}")
-                except Exception as e:
-                    st.error(f"Failed to load CSV: {e}")
-
-        st.markdown("#### Database URL")
-        db_name = st.text_input("Enter DB name", key="db_name")
-        db_url = st.text_input("Enter DB connection URL", key="db_input")
-        if db_url and db_name and st.button("Connect to DB"):
-            try:
-                get_agent().external_db_connector.connect_db(name = db_name, connection_url=db_url)
-                st.success(f"Connected to DB: {db_url}")
-            except Exception as e:
-                st.error(f"Failed to connect to DB: {e}")
-
-def store_section(agent):
-    st.subheader("📚 View Data Stores")
-    meta_store = get_agent().meta_store
-    text_store = get_agent().text_store
-    table_store = get_agent().table_store
-    external_db_store = get_agent().external_db_store
-
-    data = [
-        {"Store": "Meta Store", "Data": meta_store.get_all()},
-        {"Store": "Text Store", "Data": text_store.get_all()},
-        {"Store": "Table Store", "Data": table_store.get_all()},
-        {"Store": "External DB Store", "Data": external_db_store.get_all()},
-    ]
-
-
-    for store_entry in data:
-        store_name = store_entry["Store"]
-        rows = store_entry["Data"]
-
-        with st.expander(f"🔹 {store_name}", expanded=True):
-            if rows:
-                rows_dicts = [row.model_dump() if hasattr(row, "dict") else row for row in rows]
-                st.dataframe(rows_dicts)
-            else:
-                st.write("No data yet.")
+from ui.onboarding import onboarding_panel
+from ui.agent_factory import get_agent_bundle
+from ui.sections.chat import chat_section
+from ui.sections.loader import loader_section
+from ui.sections.stores import store_section
 
 def main():
-    st.set_page_config(page_title="AgenticRAG App", layout="wide")
-    st.title("🤖 AgenticRAG Playground")
-
-    agent = get_agent()
-
-    tab1, tab2, tab3 = st.tabs(["💬 Ask", "📥 Load Data", "📚 Stores"])
-
-    with tab1:
-        chat_section(agent)
-
-    with tab2:
-        loader_section(agent)
-
-    with tab3:
-        store_section(agent)
-
+    st.set_page_config(page_title="AgenticRAG", layout="wide", initial_sidebar_state="expanded")
     with open("ui/style.css", "r") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
+    if "active_project" not in st.session_state:
+        st.session_state["active_project"] = None
+    if st.session_state["active_project"] is None:
+        st.title("AgenticRAG Playground")
+        st.markdown("*No project selected, please select one from the sidebar.*")
+    else:
+        st.title(f"AgenticRAG Playground: {st.session_state['active_project']}")
+    
+    with st.sidebar:
+        st.markdown("### Project")
+        if st.session_state["active_project"] is None:
+            onboarding_panel()
+            st.stop()
+        else:
+            st.success(f"Active: {st.session_state['active_project']}")
+            if st.button("Switch project"):
+                st.session_state["active_project"] = None
+                st.session_state.pop("chat_messages", None)
+                st.rerun()
+
+    agent_bundle = get_agent_bundle(st.session_state["active_project"])
+    if not agent_bundle:
+        st.warning("Project config not found. Please re-create.")
+        st.session_state["active_project"] = None
+        st.rerun()
+
+
+    tabs = []
+    tabs.append("💬 Chat")
+    # loaders shown only if any loader exists
+    if any(agent_bundle.components.get(k) for k in ["text_loader", "table_loader", "external_db_connector"]):
+        tabs.append("📥 Load")
+    # stores shown if any store exists
+    if any(agent_bundle.components.get(k) for k in ["meta_store", "text_store", "table_store", "external_db_store"]):
+        tabs.append("📚 Stores")
+
+    tab_objs = st.tabs(tabs)
+
+    tab_index = 0
+    with tab_objs[tab_index]:
+        chat_section(agent_bundle)
+
+    idx = 1
+    if "📥 Load" in tabs:
+        with tab_objs[idx]:
+            loader_section(agent_bundle)
+        idx += 1
+    if "📚 Stores" in tabs:
+        with tab_objs[idx]:
+            store_section(agent_bundle)
+
+    
 if __name__ == "__main__":
     main()

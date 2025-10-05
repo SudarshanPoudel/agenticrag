@@ -19,3 +19,6 @@ venv/
 .agenticrag_data
 .agenticrag_data_custom
 example_agenticrag_data
+
+ui/data
+ui/projects
