@@ -1,57 +1,30 @@
-import asyncio
-try:
-    asyncio.get_event_loop()
-except RuntimeError:
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-import nest_asyncio
-nest_asyncio.apply()
-
-nest_asyncio.apply()
-
-import sys
-if "twisted.internet.reactor" in sys.modules:
-    del sys.modules["twisted.internet.reactor"]
-
-
-
-
-def scrape_web(url: str) -> str:
-    """Scrape and return Markdown content from a website"""
+def scrape_web(url: str) -> dict | None:
+    """Scrape and return Markdown content from a website using httpx + BeautifulSoup"""
     try:
-        from scrapy.crawler import CrawlerProcess
-        from scrapy.spiders import Spider
-        from scrapy.http import Response
+        import httpx
+        import bs4
         from markdownify import markdownify
     except ImportError:
-        raise ImportError("Scrapy and markdownify are required to scrape web pages, install it via `pip install Scrapy markdownify`")
+        raise ImportError(
+            "Required modules not found. Install them via:\n"
+            "`pip install httpx beautifulsoup4 markdownify`"
+        )
 
-    results = {"markdown": ""}
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; TextScraper/1.0)"}
 
-    class TextExtractionSpider(Spider):
-        name = "text_extraction_spider"
-        start_urls = [url]
+    try:
+        response = httpx.get(url, headers=headers, follow_redirects=True, timeout=10)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Request failed: {e}")
+        return None
 
-        def parse(self, response: Response):
-            title = response.xpath("//title/text()").get()
-            site_name = title or url.split("//")[1].split("/")[0]
-            results["site_name"] = site_name
+    soup = bs4.BeautifulSoup(response.text, "html.parser")
 
-            html_body = self._extract_html_body(response)
-            markdown_content = markdownify(html_body)
-            results["markdown"] = f"# {title}\n\n{markdown_content}" if title else markdown_content
+    title = soup.title.string.strip() if soup.title and soup.title.string else None
+    site_name = title or url.split("//")[1].split("/")[0]
 
-        def _extract_html_body(self, response: Response) -> str:
-            return response.xpath("//body").get() or ""
-
-    process = CrawlerProcess(settings={
-        "LOG_LEVEL": "ERROR",
-        "USER_AGENT": "Mozilla/5.0 (compatible; TextScraper/1.0)",
-        "ROBOTSTXT_OBEY": True,
-    })
-
-    process.crawl(TextExtractionSpider)
-    process.start()
-
-    return results if results["markdown"] else None
+    body_html = soup.body.decode_contents() if soup.body else response.text
+    markdown_content = markdownify(body_html)
+    markdown_result = f"# {title}\n\n{markdown_content}" if title else markdown_content
+    return {"site_name": site_name, "markdown": markdown_result}
