@@ -27,6 +27,7 @@ class QuestionAnsweringTask(BaseTask):
     def description(self):
         return (
             "This task answers questions based on given file content. "
+            "Use it when user just want an simple text answer for their query."
             "It takes a query and file path as input and returns the answer."
         )
 

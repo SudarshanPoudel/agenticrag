@@ -4,7 +4,7 @@ from .loaders import TextLoader, TableLoader
 from .connectors import ExternalDBConnector
 from .tasks import QuestionAnsweringTask, ChartGenerationTask
 from .retrievers import TableRetriever, SQLRetriever, VectorRetriever
-
+from .core import LLMClient
 
 __all__ = [
     "RAGAgent",

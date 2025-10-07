@@ -62,7 +62,7 @@ class RAGAgentLoaderMixin:
         """
         if not self.table_store:
             raise RAGAgentError("Table store not initialized")
-        loader = TableLoader(self.table_store, self.meta_store, f"{self.persistence_dir}/tables", self.llm)
+        loader = TableLoader(self.table_store, self.meta_store, self.llm, f"{self.persistence_dir}/tables")
         return loader.load_csv(file_path, name, description, source)
 
     def connect_db(self, name: str = "database", connection_url: str = None, connection_url_env_var: str = None, description: str = None):

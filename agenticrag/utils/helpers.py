@@ -16,7 +16,7 @@ def format_tool_metadata(tools_dict):
 
 
 def format_datasets(datasets):
-    result = "Selected Datasets:-\n"
+    result = ""
     for dataset in datasets:
         result += f"""
 - Name: {dataset.name}
@@ -34,23 +34,82 @@ def extract_blocks_from_llm_response(content: str, start_sep: str, end_sep: str,
     blocks = [m.strip() for m in matches]
     return blocks if multiple else (blocks[0] if blocks else "")
 
-def extract_json_blocks(content: str, multiple: bool = False) -> Union[List[Dict], Dict]:
-    """
-    Extract and parse JSON blocks from a string.
-    """
-    blocks = extract_blocks_from_llm_response(content, "```json", "```", multiple)
+def _extract_blocks_from_response(
+    content: str,
+    start_sep: str,
+    end_sep: str,
+    multiple: bool = False
+) -> Union[List[str], str]:
+    pattern = re.escape(start_sep) + r"(.*?)" + re.escape(end_sep)
+    matches = re.findall(pattern, content, re.DOTALL)
+    extracted = [match.strip() for match in matches]
+    return extracted if multiple else (extracted[0] if extracted else "")
+
+def _extract_json_like_blocks(text: str) -> list[str]:
+    blocks, stack, start = [], [], None
+    for i, ch in enumerate(text):
+        if ch in "{[":
+            if not stack:
+                start = i
+            stack.append(ch)
+        elif ch in "}]":
+            if stack:
+                stack.pop()
+                if not stack and start is not None:
+                    blocks.append(text[start:i+1])
+                    start = None
+    return blocks
+
+
+def extract_json_blocks(
+    content: str,
+    multiple: bool = False
+) -> Union[List[dict], dict]:
+    import ast
+
+    def try_parse_all_blocks(candidates):
+        parsed = []
+        for block in candidates:
+            try:
+                if isinstance(block, str) and block.startswith('"') and block.endswith('"'):
+                    block = ast.literal_eval(block)  # unescape stringified JSON
+                parsed.append(json.loads(block))
+            except Exception:
+                continue
+        return parsed
+
+    # 0. First try direct parsing — content *is* a full JSON string
+    try:
+        direct = json.loads(content)
+        return direct if not multiple else [direct]
+    except Exception:
+        pass
+
+    # 1. Try ```json fenced blocks
+    blocks = _extract_blocks_from_response(content, "```json", "```", multiple=True)
+
+    # 2. Try to extract all {...} or [...] using greedy matching
+    if not blocks:
+        blocks = _extract_json_like_blocks(content)
+
+
+    # 3. Try finding escaped stringified JSON
+    if not blocks:
+        escaped_match = re.search(r'"({\\n.*?})"', content)
+        if escaped_match:
+            try:
+                unescaped = bytes(escaped_match.group(1), "utf-8").decode("unicode_escape")
+                blocks = [unescaped]
+            except Exception:
+                pass
+
     if not blocks:
         return [] if multiple else {}
 
-    parsed = []
-    for block in (blocks if isinstance(blocks, list) else [blocks]):
-        try:
-            parsed.append(json.loads(block))
-        except json.JSONDecodeError:
-            print("Error: Invalid JSON format")
-            print(block)
+    parsed = try_parse_all_blocks(blocks)
+    return parsed if multiple else (parsed[0] if parsed else {})
 
-    return parsed if multiple else parsed[0] if parsed else {}
+
 
 def parse_code_blobs(blob: str) -> str:
     """

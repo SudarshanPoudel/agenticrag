@@ -1,6 +1,7 @@
 from curses import raw
+from time import sleep
 from typing import List, Optional, Union
-from litellm import completion
+from litellm import RateLimitError, completion
 
 from agenticrag.types import BaseMessage, LLMResponse
 from agenticrag.types.exceptions import LLMError
@@ -12,15 +13,20 @@ class LLMClient:
         api_key: Optional[str] = None,
         api_base: Optional[str] = None,
         temperature: Optional[float] = 0.7,
-        top_p: Optional[float] = 1.0
+        top_p: Optional[float] = 1.0,
+        rate_limit_wait_multiplier: Optional[int] = 2,
+        rate_limit_max_wait: Optional[int] = 32,
     ):
         self.model = model
         self.api_key = api_key
         self.api_base = api_base
         self.temperature = temperature
         self.top_p = top_p
+        self.rate_limit_max_wait = rate_limit_max_wait
+        self.rate_limit_wait_multiplier = rate_limit_wait_multiplier
 
     def invoke(self, messages: Union[str, BaseMessage, List[str], List[BaseMessage]]) -> LLMResponse:
+        rate_limit_wait = 0
         formatted_messages = []
         if isinstance(messages, str):
             formatted_messages.append({"role": "user", "content": messages})
@@ -37,13 +43,23 @@ class LLMClient:
         else:
             raise LLMError("Invalid message type, expected str, BaseMessage or list")
         
-        resp =  completion(
-            model=self.model, 
-            messages=formatted_messages, 
-            api_key=self.api_key,
-            temperature=self.temperature,
-            top_p=self.top_p
-        )
+        while True:
+            try:
+                resp =  completion(
+                    model=self.model, 
+                    messages=formatted_messages, 
+                    api_key=self.api_key,
+                    temperature=self.temperature,
+                    top_p=self.top_p
+                )
+                break
+            except RateLimitError as e:
+                sleep(rate_limit_wait)
+                rate_limit_wait *= self.rate_limit_wait_multiplier 
+                if rate_limit_wait > self.rate_limit_max_wait:
+                    raise LLMError(f"Rate limit exceeded: {e}")
+            except Exception as e:
+                raise LLMError(f"Failed to invoke LLM: {e}")
 
         return LLMResponse(
             role="assistant", 
