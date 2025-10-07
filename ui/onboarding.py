@@ -54,14 +54,13 @@ def onboarding_panel():
         for k, v in defaults.items():
             st.session_state.setdefault(k, v)
 
-        project_name = st.text_input("Project name", placeholder="my_rag_project")
+        project_name = st.text_input("Project name", value="my_rag_project")
         persist_dir = f"ui/data/.{project_name}_data" if project_name else "ui/data/.project_name_data"
-
+        chat_history_queue_size = st.slider("chat_history_queue_size", 1, 10, 1, 1)
         st.markdown("---")
         st.subheader("LLM")
         provider = st.selectbox("Provider", ["gemini"], index=0)
         model = st.text_input("Model name", value="gemini-2.0-pro")
-        temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.05)
         api_key = st.text_input("API key", type="password", placeholder=os.getenv("LLM_API_KEY"))
 
         st.markdown("---")
@@ -141,10 +140,10 @@ def onboarding_panel():
                     project_name=project_name,
                     persist_dir=persist_dir,
                     meta_conn_url=f"sqlite:///{persist_dir}/agenticrag.db",
+                    chat_history_queue_size=chat_history_queue_size,
                     llm=LLMConfig(
                         provider=provider,
                         model=model,
-                        temperature=temperature,
                         api_key=api_key,
                     ),
                     stores=StoreFlags(

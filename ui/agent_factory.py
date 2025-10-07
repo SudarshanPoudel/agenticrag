@@ -106,6 +106,7 @@ def build_agent_from_config(cfg: ProjectConfig) -> AgentBundle:
         retrievers=retrievers,
         tasks=tasks,
         persistent_dir=cdf(cfg.persist_dir) if False else cfg.persist_dir,
+        chat_history_queue_size=cfg.chat_history_queue_size,
         llm=_get_llm_from_config(cfg.llm)
     )
 

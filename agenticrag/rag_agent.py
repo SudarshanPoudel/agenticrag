@@ -1,4 +1,5 @@
 import os
+from collections import deque
 from typing import List
 from langchain.tools import StructuredTool
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -31,6 +32,7 @@ class RAGAgent(RAGAgentLoaderMixin):
         meta_store: MetaStore = None,
         tasks: List[BaseTask] = None,
         retrievers: List[BaseRetriever] = None,
+        chat_history_queue_size: int = 10
     ):
         """
         Initializes the RAGAgent with LLM, storage directory, metadata store, tasks, and retrievers.
@@ -43,6 +45,8 @@ class RAGAgent(RAGAgentLoaderMixin):
         """
         self.llm = llm or get_default_llm()
         self.persistence_dir = persistent_dir.rstrip("/")
+        self.chat_history = deque(maxlen=chat_history_queue_size)
+
         os.mkdir(self.persistence_dir) if not os.path.exists(self.persistence_dir) else None
         if not tasks:
             tasks = [QuestionAnsweringTask(llm=llm)]
@@ -98,6 +102,8 @@ class RAGAgent(RAGAgentLoaderMixin):
             query (str): The query to be processed by the agent.
             max_iterations (int, optional): The maximum number of iterations (retriever or task call) for the agent. Defaults to 10.
         """
+        self.chat_history.append({"role": "user", "content": query})
+        query = self._chat_history_to_str()
         tasks = self._select_tasks(query=query)
         if not tasks:
             return RAGAgentResponse(
@@ -213,7 +219,7 @@ Relevant datasets:
             [
                 SystemMessage(TASK_SELECTION_PROMPT),
                 HumanMessagePromptTemplate.from_template(
-                    "Query: {query}\nTasks and Descriptions:\n```json\n{task_list}\n```"
+                    "Chat History: {query}\nTasks and Descriptions:\n```json\n{task_list}\n```"
                 )
             ]
         ).format_messages(query=query, task_list=task_list)
@@ -251,3 +257,9 @@ Relevant datasets:
                     selected.append(retriever)
         return selected
 
+
+    def _chat_history_to_str(self):
+        string_msg = ""
+        for item in self.chat_history:
+            string_msg += f"{item['role'].capitalize()}: {item['content']}\n"
+        return string_msg

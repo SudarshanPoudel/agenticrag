@@ -35,6 +35,7 @@ class TaskConfig:
 class ProjectConfig:
     project_name: str = "default"
     persist_dir: str = "ui/.project_name_data"
+    chat_history_queue_size: int = 1
     meta_conn_url: str = ""
     llm: LLMConfig = field(default_factory=LLMConfig)
     stores: StoreFlags = field(default_factory=StoreFlags)

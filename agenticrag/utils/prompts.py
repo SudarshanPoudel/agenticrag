@@ -1,5 +1,5 @@
 TASK_SELECTION_PROMPT = """
-Based on given query and tasks, select the list of required tasks that needs to be performed to solve the query.
+Based on given chat history's last query and tasks, select the list of required tasks that needs to be performed to solve the query.
 You'll be given list of tasks and their descriptions, and you should respond in proper json format as
 ```json
 {
@@ -16,7 +16,7 @@ If no task is relevant, respond with
 
 
 DATA_SOURCE_SELECTION_PROMPT = """
-Based on given list of various data source and their description, select list of data sources that are most relevant to the query.
+Based on given list of various data source and their description, select list of data sources that are most relevant to the last query in given chat history.
 You'll be given list of data sources and their descriptions, and you should respond in proper json format as
 ```json 
 {
